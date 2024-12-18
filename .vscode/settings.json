@@ -1,0 +1,18 @@
+{
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-21",
+            "path": "~/Library/Java/JavaVirtualMachines/corretto-21.0.1/Contents/Home", // Hier bitte eigenen path einrichten
+            "default": true
+        },
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "./lib/**/*.jar" // Hier werden alle JARs in lib/ eingebunden
+    ],
+    "css.lint.vendorPrefix": "ignore", // Wichtig für Problem Log, damit JavaFX Extension (CSS Suppoort) nicht meckert
+    "java.completion.importOrder": ["#"],
+}

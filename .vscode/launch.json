@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "de.hsrm.mp3player.application.App",
+            "projectName": "pomodoro-app_a241e60f"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "de.hsrm.mp3player.application.App",
+            "projectName": "cleanJavaFX_55e84b1d",
+            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics"
+        }
+    ]
+}
