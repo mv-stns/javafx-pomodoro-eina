@@ -3,8 +3,7 @@
 ![WIP Image](wip-image.png)
 
 > [!NOTE] 
-> Dies ist eine JavaFX Vorlage für ein Java-FX Projekt. Das Projekt ist vorkonfiguriert und bereit zur Verwendung mit modernen Entwicklungswerkzeugen.
-> Funktioniert auf Silicon Macs!
+> Dies ist eine Pomodoro App des ENIA-Moduls SEM3-WS2024.
 
 ## 🛠️ Technologie-Stack
 
