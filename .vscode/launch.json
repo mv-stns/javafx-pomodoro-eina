@@ -8,7 +8,7 @@
             "type": "java",
             "name": "App",
             "request": "launch",
-            "mainClass": "de.hsrm.mp3player.application.App",
+            "mainClass": "com.pomodoro.App",
             "projectName": "pomodoro-app_a241e60f"
         },
         {
