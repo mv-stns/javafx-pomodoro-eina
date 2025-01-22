@@ -1,4 +1,4 @@
-package com.pomodoro.presentation.scenes;
+package com.pomodoro.presentation.scenes.settings;
 
 import javafx.scene.layout.BorderPane;
 
