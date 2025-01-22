@@ -8,16 +8,9 @@
             "type": "java",
             "name": "App",
             "request": "launch",
-            "mainClass": "com.pomodoro.App",
+            "mainClass": "App",
+            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics",
             "projectName": "pomodoro-app_a241e60f"
-        },
-        {
-            "type": "java",
-            "name": "App",
-            "request": "launch",
-            "mainClass": "de.hsrm.mp3player.application.App",
-            "projectName": "cleanJavaFX_55e84b1d",
-            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics"
         },
         {
             "type": "java",
