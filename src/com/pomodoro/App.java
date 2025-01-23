@@ -1,36 +1,48 @@
 package com.pomodoro;
+
+import com.pomodoro.presentation.views.timer.TimerViewController;
+import java.net.URL;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class App extends Application {
+  private AnchorPane timerView;
 
   @Override
   public void start(Stage mainStage) throws Exception {
-    Pane root = new Pane();
-    Scene scene = new Scene(root, 1440, 800);
+    FXMLLoader loader =
+        new FXMLLoader(
+            getClass()
+                .getClassLoader()
+                .getResource("com/pomodoro/presentation/views/timer/timerView.fxml"));
+    timerView = loader.load();
 
-    Text text = new Text("Hello JavaFX");
-    text.setStyle("-fx-font-weight: bold; -fx-font-size: 36px;");
- 
-    text.setX(50);
-    text.setY(50);
-    root.getChildren().add(text);
+    Scene scene = new Scene(timerView, 1440, 800);
+
+    // Add only variables.css to the scene
+    try {
+      URL variablesUrl =
+          getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
+      if (variablesUrl == null) {
+        throw new IllegalStateException("Could not find variables.css");
+      }
+      scene.getStylesheets().add(variablesUrl.toExternalForm());
+
+    } catch (Exception e) {
+      System.err.println("Error loading variables.css: " + e.getMessage());
+      e.printStackTrace();
+    }
+
     mainStage.setScene(scene);
     mainStage.setTitle("Pomodoro App");
     mainStage.show();
   }
 
-  public void init() {
-    // Implementation eventueller Business-Logiken
-  }
-  public void stop() {
-    // Freigabe von Resourcen
-  }
-
   public static void main(String[] args) {
     Application.launch(App.class, args);
   }
- }
+}

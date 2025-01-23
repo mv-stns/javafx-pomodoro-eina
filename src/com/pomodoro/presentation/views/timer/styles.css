@@ -1,0 +1,169 @@
+.timer-view {
+    -fx-background-color: -bg-black;
+}
+
+.mode-button {
+    -fx-background-color: -button-bg;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+}
+
+.mode-button.selected {
+    -fx-background-color: #3a3b3e;
+}
+
+.timer-arc {
+    -fx-stroke: linear-gradient(from 0% 0% to 100% 100%, #FF4E02 0%, #FFB702 100%);
+    -fx-stroke-width: 20;
+    -fx-fill: transparent;
+}
+
+.timer-arc-static {
+    -fx-stroke: rgba(255, 255, 255, 0.1);
+    -fx-stroke-width: 20;
+    -fx-fill: transparent;
+}
+
+.time-label {
+    -fx-font-size: 48px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.range-label {
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+}
+
+.control-button {
+    -fx-background-color: -bg-button;
+    -fx-text-fill: -text-main;
+    -fx-background-radius: 999;
+    -fx-padding: 12 28;
+    -fx-cursor: hand;
+    -fx-min-height: 60;
+    -fx-pref-height: 60;
+    -fx-font-size: 20;
+}
+
+.debugging {
+    -fx-border-color: red;
+    -fx-border-width: 2;
+    -fx-background-color: yellow;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+
+
+.control-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Reset and Skip buttons */
+.control-button:not(.round-button) {
+    -fx-min-width: 130;
+    -fx-pref-width: 130;
+}
+
+.control-button SVGPath {
+    -fx-fill: -text-main;
+}
+
+.control-button Text {
+    -fx-fill: -text-main;
+}
+
+/* Play button */
+.control-button.round-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 60;
+    -fx-min-height: 60;
+    -fx-pref-width: 60;
+    -fx-pref-height: 60;
+    -fx-max-width: 60;
+    -fx-max-height: 60;
+    -fx-padding: 18;
+}
+
+.control-button HBox {
+    -fx-spacing: 8;
+    -fx-alignment: center;
+}
+
+
+
+.play-button {
+    -fx-background-color: #2a2b2e;
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-shape: "M8 5v14l11-7z";
+    /* Play icon */
+}
+
+.play-button.pause {
+    -fx-shape: "M6 19h4V5H6v14zm8-14v14h4V5h-4z";
+    /* Pause icon */
+}
+
+.phase-wrapper {
+    -fx-background-color: -bg-muted;
+    -fx-background-radius: 16;
+    -fx-padding: 4 4 4 4;
+    /* Small padding around all buttons */
+    -fx-spacing: 2;
+    /* Space between buttons */
+}
+
+.mode-button {
+    -fx-background-color: transparent;
+    /* Default transparent background */
+    -fx-text-fill: -text-main;
+    -fx-background-radius: 12;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.mode-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    /* Subtle hover effect */
+}
+
+.mode-button.selected {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    /* Slightly darker when selected */
+}
+
+.mode-button HBox {
+    -fx-spacing: 8;
+    /* Space between icon and text */
+    -fx-alignment: center;
+}
+
+.mode-button SVGPath {
+    -fx-fill: rgba(113, 119, 132, 0.8);
+    /* Slightly transparent icon */
+}
+
+.mode-button:hover SVGPath {
+    -fx-fill: rgba(113, 119, 132, 1);
+    /* Full opacity on hover */
+}
+
+.mode-button.selected SVGPath {
+    -fx-fill: -text-main;
+}
+
+.mode-button Text {
+    -fx-fill: rgba(113, 119, 132, 0.8);
+}
+
+.mode-button:hover Text {
+    -fx-fill: rgba(113, 119, 132, 1);
+}
+
+.mode-button.selected Text {
+    -fx-fill: -text-main;
+}
