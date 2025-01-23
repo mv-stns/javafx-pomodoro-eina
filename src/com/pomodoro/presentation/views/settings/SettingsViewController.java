@@ -1,6 +1,6 @@
-package com.pomodoro.presentation.scenes.settings;
+package com.pomodoro.presentation.views.settings;
 
-import com.pomodoro.presentation.scenes.Controller;
+import com.pomodoro.presentation.views.Controller;
 
 public class SettingsViewController extends Controller<SettingsView> {
     public SettingsViewController() {
