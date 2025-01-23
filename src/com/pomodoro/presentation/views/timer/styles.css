@@ -2,14 +2,14 @@
     -fx-background-color: -bg-black;
 }
 
-.mode-button {
+.phase-mode {
     -fx-background-color: -button-bg;
     -fx-text-fill: white;
     -fx-background-radius: 20;
     -fx-padding: 8 16;
 }
 
-.mode-button.selected {
+.phase-mode.selected {
     -fx-background-color: #3a3b3e;
 }
 
@@ -26,9 +26,7 @@
 }
 
 .time-label {
-    -fx-font-size: 48px;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+    
 }
 
 .range-label {
@@ -112,58 +110,57 @@
     -fx-background-color: -bg-muted;
     -fx-background-radius: 16;
     -fx-padding: 4 4 4 4;
-    /* Small padding around all buttons */
-    -fx-spacing: 2;
-    /* Space between buttons */
+    -fx-spacing: 8;
 }
 
-.mode-button {
+.phase-mode {
     -fx-background-color: transparent;
     /* Default transparent background */
     -fx-text-fill: -text-main;
     -fx-background-radius: 12;
     -fx-padding: 8 16;
     -fx-cursor: hand;
+    -fx-min-width: 145;
 }
 
-.mode-button:hover {
+.phase-mode:hover {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     /* Subtle hover effect */
 }
 
-.mode-button.selected {
+.phase-mode.selected {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     /* Slightly darker when selected */
 }
 
-.mode-button HBox {
+.phase-mode HBox {
     -fx-spacing: 8;
     /* Space between icon and text */
     -fx-alignment: center;
 }
 
-.mode-button SVGPath {
+.phase-mode SVGPath {
     -fx-fill: rgba(113, 119, 132, 0.8);
     /* Slightly transparent icon */
 }
 
-.mode-button:hover SVGPath {
+.phase-mode:hover SVGPath {
     -fx-fill: rgba(113, 119, 132, 1);
     /* Full opacity on hover */
 }
 
-.mode-button.selected SVGPath {
+.phase-mode.selected SVGPath {
     -fx-fill: -text-main;
 }
 
-.mode-button Text {
+.phase-mode Text {
     -fx-fill: rgba(113, 119, 132, 0.8);
 }
 
-.mode-button:hover Text {
+.phase-mode:hover Text {
     -fx-fill: rgba(113, 119, 132, 1);
 }
 
-.mode-button.selected Text {
+.phase-mode.selected Text {
     -fx-fill: -text-main;
 }

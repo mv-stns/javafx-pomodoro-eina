@@ -1,5 +1,6 @@
 package com.pomodoro;
 
+import com.pomodoro.presentation.utils.FontLoader;
 import com.pomodoro.presentation.views.timer.TimerViewController;
 import java.net.URL;
 import javafx.application.Application;
@@ -11,6 +12,11 @@ import javafx.stage.Stage;
 
 public class App extends Application {
   private AnchorPane timerView;
+
+  @Override
+  public void init() {
+    FontLoader.loadFonts();
+  }
 
   @Override
   public void start(Stage mainStage) throws Exception {

@@ -1,18 +1,34 @@
 package com.pomodoro.presentation.views.timer;
 
+import com.pomodoro.presentation.components.LetterSpacedText;
+import com.pomodoro.presentation.utils.FontLoader;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class TimerViewController {
@@ -22,7 +38,7 @@ public class TimerViewController {
   @FXML private Button longBreakButton;
   @FXML private Arc timerArc;
   @FXML private Arc timerArcStatic;
-  @FXML private Label timeLabel;
+  @FXML private LetterSpacedText timeLabel;
   @FXML private Label rangeLabel;
   @FXML private Button resetButton;
   @FXML private Button playButton;
@@ -31,17 +47,43 @@ public class TimerViewController {
 
   private Timeline timeline;
   private boolean isRunning = false;
-  private int remainingSeconds;
-  private static final int FOCUS_TIME = 1 * 60; // 25 minutes in seconds
+  private double remainingMillis;
+  private static final int FOCUS_TIME = 5; // 25 minutes in seconds
+  private static final int MILLIS_PER_SECOND = 1000;
 
   @FXML
   public void initialize() {
-    phaseWrapper.setPrefWidth(Region.USE_COMPUTED_SIZE);
-    phaseWrapper.setMaxWidth(Region.USE_PREF_SIZE);
-
+    setupStyles();
     setupButtons();
     setupTimer();
     updateDisplay();
+  }
+
+  private void setupStyles() {
+    phaseWrapper.setPrefWidth(Region.USE_COMPUTED_SIZE);
+    phaseWrapper.setMaxWidth(Region.USE_PREF_SIZE);
+
+    // Timer Label Styles
+    timeLabel.setText("00:00");
+    timeLabel.setLetterSpacing(-2);
+    timeLabel.setFont(FontLoader.semiBold(48));
+    timeLabel.setFill(Color.WHITE);
+    timeLabel.setAlignment(Pos.CENTER);
+
+    // Arc Styles
+    timerArc.setStrokeLineCap(StrokeLineCap.ROUND);
+    timerArcStatic.setStrokeLineCap(StrokeLineCap.ROUND);
+    Rectangle rec = new Rectangle();
+    rec.setWidth(FOCUS_TIME);
+    timerArc.setStrokeType(StrokeType.CENTERED);
+
+    // Phase Button Styles
+    List.of(focusButton, shortBreakButton, longBreakButton)
+        .forEach(
+            button -> {
+              HBox hbox = (HBox) button.getGraphic();
+              ((Text) hbox.getChildren().get(1)).setFont(FontLoader.semiBold(14.0));
+            });
   }
 
   private void setupButtons() {
@@ -55,15 +97,15 @@ public class TimerViewController {
   }
 
   private void setupTimer() {
-    remainingSeconds = FOCUS_TIME;
+    remainingMillis = FOCUS_TIME * MILLIS_PER_SECOND;
     timeline =
         new Timeline(
             new KeyFrame(
-                Duration.seconds(1),
+                Duration.millis(16), // ca. 60 FPS (1000ms / 60 ≈ 16.67ms)
                 e -> {
-                  remainingSeconds--;
+                  remainingMillis -= 16;
                   updateDisplay();
-                  if (remainingSeconds <= 0) {
+                  if (remainingMillis <= 0) {
                     timeline.stop();
                     // Handle timer completion
                   }
@@ -84,7 +126,7 @@ public class TimerViewController {
 
   private void resetTimer() {
     timeline.stop();
-    remainingSeconds = FOCUS_TIME;
+    remainingMillis = FOCUS_TIME * MILLIS_PER_SECOND;
     isRunning = false;
     playButton.getStyleClass().remove("pause");
     updateDisplay();
@@ -99,25 +141,27 @@ public class TimerViewController {
   }
 
   private void updateDisplay() {
-    // Update time label
-    int minutes = remainingSeconds / 60;
-    int seconds = remainingSeconds % 60;
+    // Update time label (still showing seconds precision)
+    int totalSeconds = (int) (remainingMillis / MILLIS_PER_SECOND);
+    int minutes = totalSeconds / 60;
+    int seconds = totalSeconds % 60;
+
     Platform.runLater(
         () -> {
           timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
         });
 
-    // Update arc progress - Simplified
-    double progress = (double) (FOCUS_TIME - remainingSeconds) / FOCUS_TIME;
+    // Smooth arc progress
+    double progress = 1 - (remainingMillis / (FOCUS_TIME * MILLIS_PER_SECOND));
     Platform.runLater(
         () -> {
-          timerArc.setStartAngle(90); // Keep it fixed at top
-          timerArc.setLength(-progress * 360); // Negative to go clockwise
+        //   timerArc.setStartAngle(90);
+          timerArc.setLength(-progress*360); // Negative to go clockwise
         });
 
     // Update range label
     LocalTime now = LocalTime.now();
-    LocalTime endTime = now.plusSeconds(remainingSeconds);
+    LocalTime endTime = now.plusSeconds(totalSeconds);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     Platform.runLater(
         () -> {

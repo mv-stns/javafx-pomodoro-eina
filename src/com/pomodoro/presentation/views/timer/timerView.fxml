@@ -7,9 +7,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
+<?import com.pomodoro.presentation.components.LetterSpacedText?>
 
 <AnchorPane styleClass="timer-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21"
     xmlns:fx="http://javafx.com/fxml/1"
@@ -19,33 +20,33 @@
         AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
         <!-- Top buttons -->
-        <HBox fx:id="phaseWrapper" alignment="CENTER" spacing="2" styleClass="phase-wrapper">
-            <Button fx:id="focusButton" styleClass="mode-button,selected">
+        <HBox fx:id="phaseWrapper" alignment="CENTER" spacing="4" styleClass="phase-wrapper">
+            <Button fx:id="focusButton" styleClass="phase-mode,selected">
                 <graphic>
                     <HBox alignment="CENTER" spacing="8">
                         <SVGPath
                             content="M7.75746 1.87243C7.02318 1.87243 6.29609 2.01705 5.6177 2.29805C4.93932 2.57905 4.32292 2.99091 3.8037 3.51013C3.28449 4.02934 2.87263 4.64574 2.59163 5.32412C2.31063 6.00251 2.16601 6.7296 2.16601 7.46388C2.16601 8.19816 2.31063 8.92525 2.59163 9.60363C2.87263 10.282 3.28449 10.8984 3.8037 11.4176C4.32292 11.9368 4.93932 12.3487 5.6177 12.6297C6.29609 12.9107 7.02318 13.0553 7.75746 13.0553C9.2404 13.0553 10.6626 12.4662 11.7112 11.4176C12.7598 10.369 13.3489 8.94682 13.3489 7.46388C13.3489 5.98093 12.7598 4.55873 11.7112 3.51013C10.6626 2.46152 9.2404 1.87243 7.75746 1.87243ZM0.923462 7.46388C0.923462 3.68965 3.98323 0.629883 7.75746 0.629883C11.5317 0.629883 14.5915 3.68965 14.5915 7.46388C14.5915 11.2381 11.5317 14.2979 7.75746 14.2979C3.98323 14.2979 0.923462 11.2381 0.923462 7.46388ZM7.75746 4.35752C6.9336 4.35752 6.14348 4.68479 5.56093 5.26735C4.97837 5.8499 4.6511 6.64002 4.6511 7.46388C4.6511 8.28774 4.97837 9.07785 5.56093 9.66041C6.14348 10.243 6.9336 10.5702 7.75746 10.5702C8.58132 10.5702 9.37143 10.243 9.95399 9.66041C10.5365 9.07785 10.8638 8.28774 10.8638 7.46388C10.8638 6.64002 10.5365 5.8499 9.95399 5.26735C9.37143 4.68479 8.58132 4.35752 7.75746 4.35752ZM3.40855 7.46388C3.40855 6.89277 3.52104 6.32726 3.73959 5.79962C3.95814 5.27199 4.27848 4.79257 4.68232 4.38874C5.08615 3.9849 5.56557 3.66457 6.0932 3.44601C6.62084 3.22746 7.18635 3.11497 7.75746 3.11497C8.32856 3.11497 8.89408 3.22746 9.42171 3.44601C9.94935 3.66457 10.4288 3.9849 10.8326 4.38874C11.2364 4.79257 11.5568 5.27199 11.7753 5.79962C11.9939 6.32726 12.1064 6.89277 12.1064 7.46388C12.1064 8.61728 11.6482 9.72344 10.8326 10.539C10.017 11.3546 8.91086 11.8128 7.75746 11.8128C6.60406 11.8128 5.49789 11.3546 4.68232 10.539C3.86674 9.72344 3.40855 8.61728 3.40855 7.46388ZM6.51491 7.46388C6.51491 7.13434 6.64582 6.81829 6.87885 6.58527C7.11187 6.35224 7.42791 6.22133 7.75746 6.22133C8.087 6.22133 8.40305 6.35224 8.63607 6.58527C8.86909 6.81829 9 7.13434 9 7.46388C9 7.79342 8.86909 8.10947 8.63607 8.34249C8.40305 8.57551 8.087 8.70642 7.75746 8.70642C7.42791 8.70642 7.11187 8.57551 6.87885 8.34249C6.64582 8.10947 6.51491 7.79342 6.51491 7.46388Z" />
-                        <Text>Fokus</Text>
+                        <Text styleClass="buttonText">Fokus</Text>
                     </HBox>
                 </graphic>
             </Button>
 
-            <Button fx:id="shortBreakButton" styleClass="mode-button">
+            <Button fx:id="shortBreakButton" styleClass="phase-mode">
                 <graphic>
                     <HBox alignment="CENTER" spacing="8">
                         <SVGPath
                             content="M3.41454 1.25098H4.65709V3.11479H3.41454V1.25098ZM5.89963 1.25098L7.14218 1.25098V3.11479H5.89963V1.25098ZM8.38472 1.25098H9.62726V3.11479H8.38472V1.25098ZM12.1124 5.59988H10.8698V4.35734H2.172L2.172 11.1913C2.172 12.2189 3.00823 13.0552 4.03581 13.0552H9.00599C10.0336 13.0552 10.8698 12.2189 10.8698 11.1913H12.1124C12.7976 11.1913 13.3549 10.6341 13.3549 9.94879V6.84243C13.3549 6.15716 12.7976 5.59988 12.1124 5.59988ZM9.62726 11.1913C9.62726 11.3561 9.56181 11.5141 9.4453 11.6306C9.32879 11.7472 9.17076 11.8126 9.00599 11.8126H4.03581C3.87104 11.8126 3.71302 11.7472 3.59651 11.6306C3.48 11.5141 3.41454 11.3561 3.41454 11.1913V5.59988H9.62726V11.1913ZM10.8698 9.94879V6.84243H12.1124L12.1136 9.94879H10.8698Z" />
-                        <Text>Kurze Pause</Text>
+                        <Text styleClass="buttonText">Kurze Pause</Text>
                     </HBox>
                 </graphic>
             </Button>
 
-            <Button fx:id="longBreakButton" styleClass="mode-button">
+            <Button fx:id="longBreakButton" styleClass="phase-mode">
                 <graphic>
                     <HBox alignment="CENTER" spacing="8">
                         <SVGPath
                             content="M6.76937 9.81846C5.8796 9.81846 5.02628 9.465 4.39712 8.83584C3.76796 8.20668 3.4145 7.35335 3.4145 6.46358C3.4145 5.57382 3.76796 4.72049 4.39712 4.09133C5.02628 3.46217 5.8796 3.10871 6.76937 3.10871C7.65914 3.10871 8.51246 3.46217 9.14162 4.09133C9.77078 4.72049 10.1242 5.57382 10.1242 6.46358C10.1242 7.35335 9.77078 8.20668 9.14162 8.83584C8.51246 9.465 7.65914 9.81846 6.76937 9.81846ZM6.76937 8.70017C7.36255 8.70017 7.93143 8.46453 8.35087 8.04509C8.77031 7.62565 9.00595 7.05676 9.00595 6.46358C9.00595 5.87041 8.77031 5.30152 8.35087 4.88208C7.93143 4.46264 7.36255 4.227 6.76937 4.227C6.17619 4.227 5.60731 4.46264 5.18787 4.88208C4.76843 5.30152 4.53279 5.87041 4.53279 6.46358C4.53279 7.05676 4.76843 7.62565 5.18787 8.04509C5.60731 8.46453 6.17619 8.70017 6.76937 8.70017V8.70017ZM6.21023 0.312988H7.32852V1.99042H6.21023V0.312988ZM6.21023 10.9367H7.32852V12.6142H6.21023V10.9367ZM2.02502 2.50987L2.81566 1.71924L4.0016 2.90519L3.21097 3.69582L2.02502 2.51043V2.50987ZM9.53714 10.022L10.3278 9.23135L11.5137 10.4173L10.7231 11.2079L9.53714 10.022ZM10.7231 1.71868L11.5137 2.50987L10.3278 3.69582L9.53714 2.90519L10.7231 1.71924V1.71868ZM3.21097 9.23135L4.0016 10.022L2.81566 11.2079L2.02502 10.4173L3.21097 9.23135V9.23135ZM12.92 5.90444V7.02273H11.2425V5.90444H12.92ZM2.29621 5.90444V7.02273H0.618774L0.618774 5.90444H2.29621Z" />
-                        <Text>Lange Pause</Text>
+                        <Text styleClass="buttonText">Lange Pause</Text>
                     </HBox>
                 </graphic>
             </Button>
@@ -53,30 +54,47 @@
 
 
         <!-- Timer circle and display -->
-        <StackPane alignment="CENTER">
-            <Group>
-                <Arc fx:id="timerArcStatic"
-                    radiusX="150"
-                    radiusY="150"
-                    startAngle="90"
-                    length="360"
-                    styleClass="timer-arc-static"
-                    type="OPEN" />
+        <AnchorPane>
+            <StackPane AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0"
+                AnchorPane.topAnchor="0"
+                alignment="CENTER"
+                >
 
-                <Arc fx:id="timerArc"
-                    radiusX="150"
-                    radiusY="150"
-                    startAngle="90"
-                    length="0"
-                    styleClass="timer-arc"
-                    type="OPEN" />
-            </Group>
+                <Group>
+                    <Rectangle 
+                        width="400"
+                        height="400"
+                        fill="transparent"
+                    />
+                    <Arc fx:id="timerArcStatic"
+                        radiusX="150"
+                        radiusY="150"
+                        startAngle="90"
+                        length="360"
+                        styleClass="timer-arc-static"
+                        centerX="200"
+                        centerY="200"
+                        type="OPEN" />
 
-            <VBox alignment="CENTER" spacing="10">
-                <Label fx:id="timeLabel" styleClass="time-label" text="11:13" />
-                <Label fx:id="rangeLabel" styleClass="range-label" text="14:24 → 14:49" />
-            </VBox>
-        </StackPane>
+                    <Arc fx:id="timerArc"
+                        radiusX="150"
+                        radiusY="150"
+                        startAngle="90"
+                        length="0"
+                        styleClass="timer-arc"
+                        centerX="200"
+                        centerY="200"
+                        type="OPEN" />
+                </Group>
+
+                <VBox alignment="CENTER" spacing="10">
+                    <LetterSpacedText fx:id="timeLabel" />
+                    <Label fx:id="rangeLabel" styleClass="range-label" text="14:24 → 14:49" />
+                </VBox>
+            </StackPane>
+        </AnchorPane>
 
 
         <!-- Bottom control buttons -->
