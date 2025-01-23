@@ -2,16 +2,27 @@
     "java.project.sourcePaths": [
         "src"
     ],
-    "java.configuration.runtimes": [
-        {
-            "name": "JavaSE-21",
-            "path": "~/Library/Java/JavaVirtualMachines/corretto-21.0.1/Contents/Home", // Hier bitte eigenen path einrichten
-            "default": true
-        },
-    ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "./lib/**/*.jar" // Hier werden alle JARs in lib/ eingebunden
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/tritonus_share.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/formatter.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/mp3agic.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/minim.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/tritonus_aos.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.graphics.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.web.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/eia_StaticScanner.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.swing.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.fxml.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.base.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/jsminim.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/mp3ui.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/jl1.0.1.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.media.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/mp3spi1.9.5.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx-swt.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/minim_library/eia_simpleminim_v2.jar",
+        "/Users/marcusvaitschulis/projects/pomodoro-app/lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib/javafx.controls.jar"
     ],
     "css.lint.vendorPrefix": "ignore", // Wichtig für Problem Log, damit JavaFX Extension (CSS Suppoort) nicht meckert
     "java.completion.importOrder": ["#"],

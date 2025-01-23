@@ -6,18 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "App",
-            "request": "launch",
-            "mainClass": "App",
-            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics",
-            "projectName": "pomodoro-app_a241e60f"
-        },
-        {
-            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "vmArgs": "--module-path \"lib/openjfx-23.0.1_osx-aarch64_bin-sdk/javafx-sdk-23.0.1/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics"
+            "vmArgs": "--module-path \"lib/openjfx-23.0.2_osx-aarch64_bin-sdk/javafx-sdk-23.0.2/lib\" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics"
         }
     ]
 }
