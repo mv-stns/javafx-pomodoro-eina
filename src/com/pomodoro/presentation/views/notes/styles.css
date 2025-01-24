@@ -123,11 +123,6 @@
     -fx-stroke-width: 1.5;
 }
 
-.task-list {
-    -fx-spacing: 8;
-    -fx-padding: 8 0 0 0;
-}
-
 .check-box {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -145,6 +140,7 @@
     -fx-background-image: url("../../../assets/unMarked.png");
     -fx-alignment: center;
 }
+
 .check-box:selected .mark {
     -fx-background-color: transparent;
     -fx-alignment: center;
@@ -167,11 +163,50 @@
     -fx-background-color: transparent;
 }
 
-.delete-task-button > .delete-task-icon {
+.delete-task-button>.delete-task-icon {
     -fx-cursor: hand;
     -fx-fill: white;
 }
-.delete-task-button:hover > .delete-task-icon {
+
+.delete-task-button:hover>.delete-task-icon {
     -fx-cursor: hand;
     -fx-fill: rgb(211, 10, 10);
+}
+
+.task-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-fit-to-width: true;
+}
+
+.task-scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+.task-scroll-pane>.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 8;
+}
+
+.task-scroll-pane>.scroll-bar:vertical>.track {
+    -fx-background-color: transparent;
+}
+
+.task-scroll-pane>.scroll-bar:vertical>.thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 4;
+}
+
+.task-scroll-pane>.scroll-bar:vertical>.increment-button,
+.task-scroll-pane>.scroll-bar:vertical>.decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.task-list {
+    -fx-background-color: transparent;
+    -fx-spacing: 8;
+    -fx-padding: 4;
 }
