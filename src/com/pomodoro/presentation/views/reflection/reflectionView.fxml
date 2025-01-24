@@ -110,6 +110,7 @@
             </Button>
             <Button fx:id="closeButton"
                 styleClass="close-button"
+                text="schliessen"
                 onAction="#closeDialog" />
         </HBox>
     </VBox>

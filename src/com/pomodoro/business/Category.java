@@ -1,5 +1,7 @@
 package com.pomodoro.business;
 
+import java.util.Objects;
+
 public class Category {
   private String name;
   private boolean isRemovable = true;
@@ -24,5 +26,18 @@ public class Category {
   @Override
   public String toString() {
     return name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Category category = (Category) o;
+    return Objects.equals(name.toLowerCase(), category.name.toLowerCase());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name.toLowerCase());
   }
 }

@@ -1,7 +1,6 @@
 package com.pomodoro.presentation.views.reflection;
 
 import com.pomodoro.business.Category;
-import com.pomodoro.business.utils.Debug;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
 import javafx.application.Platform;
@@ -126,51 +125,58 @@ public class ReflectionViewController {
           }
         });
 
-    // Handle selection changes
-    categoryComboBox
-        .getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-            (obs, oldVal, newVal) -> {
-              if (newVal != null && !selectedCategories.contains(newVal)) {
-                selectedCategories.add(newVal);
-                addCategoryChip(newVal);
-                Platform.runLater(
-                    () -> {
-                      categoryComboBox.getSelectionModel().clearSelection();
-                      categoryComboBox.getEditor().clear();
-                    });
-              }
-            });
-
-    // Handle custom category creation
+    // Handle custom category creation (when Enter is pressed)
     categoryComboBox
         .getEditor()
         .setOnAction(
             e -> {
               String text = categoryComboBox.getEditor().getText().trim();
               if (!text.isEmpty()) {
-                // Check if category already exists
+                if (isCategoryAlreadySelected(text)) {
+                  showError("Diese Kategorie wurde bereits hinzugefügt!");
+                  categoryComboBox.getEditor().clear();
+                  return;
+                }
+
+                // Create or get existing category
+                Category newCategory = new Category(text);
                 Category existing =
                     categories.stream()
                         .filter(c -> c.getName().equalsIgnoreCase(text))
                         .findFirst()
                         .orElse(null);
 
-                Category category = existing != null ? existing : new Category(text);
-
                 if (existing == null) {
-                  categories.add(category);
-                }
-
-                if (!selectedCategories.contains(category)) {
-                  selectedCategories.add(category);
-                  addCategoryChip(category);
+                  categories.add(newCategory);
+                  selectedCategories.add(newCategory);
+                  addCategoryChip(newCategory);
+                } else {
+                  selectedCategories.add(existing);
+                  addCategoryChip(existing);
                 }
 
                 categoryComboBox.getEditor().clear();
               }
             });
+
+    // Handle selection from dropdown
+    categoryComboBox.setOnAction(
+        e -> {
+          Category selected = categoryComboBox.getValue();
+          if (selected != null) {
+            if (isCategoryAlreadySelected(selected.getName())) {
+              showError("Diese Kategorie wurde bereits hinzugefügt!");
+            } else {
+              selectedCategories.add(selected);
+              addCategoryChip(selected);
+            }
+            Platform.runLater(
+                () -> {
+                  categoryComboBox.getSelectionModel().clearSelection();
+                  categoryComboBox.getEditor().clear();
+                });
+          }
+        });
 
     // Clear editor on focus lost
     categoryComboBox
@@ -256,5 +262,22 @@ public class ReflectionViewController {
 
   public String getReflectionText() {
     return reflectionArea.getText();
+  }
+
+  private void showError(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Fehler");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert
+        .getDialogPane()
+        .getStylesheets()
+        .add(getClass().getResource("styles.css").toExternalForm());
+    alert.showAndWait();
+  }
+
+  private boolean isCategoryAlreadySelected(String categoryName) {
+    return selectedCategories.stream()
+        .anyMatch(cat -> cat.getName().equalsIgnoreCase(categoryName.trim()));
   }
 }

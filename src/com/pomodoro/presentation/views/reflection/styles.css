@@ -85,6 +85,9 @@
     -fx-background-radius: 8;
     -fx-padding: 12 24;
 }
+.save-button:hover {
+    -fx-background-color: #c33b00;
+}
 
 .save-button .add-task-icon {
     -fx-fill: white;
