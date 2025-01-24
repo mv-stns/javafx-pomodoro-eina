@@ -4,7 +4,6 @@ import javafx.beans.DefaultProperty;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -35,14 +34,12 @@ public class LetterSpacedText extends FlowPane {
     setVgap(0);
     setRowValignment(javafx.geometry.VPos.CENTER);
 
-    // Add listeners to properties
     text.addListener((obs, old, newValue) -> updateText());
     font.addListener((obs, old, newValue) -> updateFont());
     fill.addListener((obs, old, newValue) -> updateFill());
     letterSpacing.addListener((obs, old, newValue) -> setHgap(newValue.doubleValue()));
   }
 
-  // Text Property
   public String getText() {
     return text.get();
   }
@@ -55,7 +52,6 @@ public class LetterSpacedText extends FlowPane {
     return text;
   }
 
-  // Font Property
   public Font getFont() {
     return font.get();
   }
@@ -68,7 +64,6 @@ public class LetterSpacedText extends FlowPane {
     return font;
   }
 
-  // Fill Property
   public Color getFill() {
     return fill.get();
   }
@@ -81,7 +76,6 @@ public class LetterSpacedText extends FlowPane {
     return fill;
   }
 
-  // Letter Spacing Property
   public double getLetterSpacing() {
     return letterSpacing.get();
   }
@@ -94,7 +88,6 @@ public class LetterSpacedText extends FlowPane {
     return letterSpacing;
   }
 
-  // Private update methods
   private void updateText() {
     getChildren().clear();
     String value = getText();

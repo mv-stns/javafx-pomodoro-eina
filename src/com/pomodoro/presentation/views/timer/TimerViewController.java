@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
@@ -35,9 +34,23 @@ public class TimerViewController {
   private Timeline timeline;
   private boolean isRunning = false;
   private double remainingMillis;
-  private static final int FOCUS_TIME = 5; // 25 minutes in seconds
   private static final int MILLIS_PER_SECOND = 1000;
   private PomoPhase currentPhase = PomoPhase.FOCUS;
+  private static final int POMODOROS_UNTIL_LONG_BREAK = 3;
+  private int completedPomodoros = 0;
+  private boolean isInBreak = false;
+  private ViewSwitchCallback viewSwitchCallback;
+  private Runnable onReflectionComplete;
+
+  public interface ViewSwitchCallback {
+    void switchToReflection();
+
+    void switchToMain();
+  }
+
+  public void setViewSwitchCallback(ViewSwitchCallback callback) {
+    this.viewSwitchCallback = callback;
+  }
 
   @FXML
   public void initialize() {
@@ -51,19 +64,16 @@ public class TimerViewController {
     phaseWrapper.setPrefWidth(Region.USE_COMPUTED_SIZE);
     phaseWrapper.setMaxWidth(Region.USE_PREF_SIZE);
 
-    // Timer Label Styles
     timeLabel.setText("00:00");
     timeLabel.setLetterSpacing(-2);
     timeLabel.setFont(FontLoader.semiBold(48));
     timeLabel.setFill(Color.WHITE);
     timeLabel.setAlignment(Pos.CENTER);
 
-    // Arc Styles
     timerArc.setStrokeLineCap(StrokeLineCap.ROUND);
     timerArcStatic.setStrokeLineCap(StrokeLineCap.ROUND);
     timerArc.setStrokeType(StrokeType.CENTERED);
 
-    // Phase Button Styles
     List.of(focusButton, shortBreakButton, longBreakButton)
         .forEach(
             button -> {
@@ -72,8 +82,6 @@ public class TimerViewController {
             });
 
     rangeLabel.setFont(FontLoader.regular(16));
-
-    
   }
 
   private void setupButtons() {
@@ -91,16 +99,54 @@ public class TimerViewController {
     timeline =
         new Timeline(
             new KeyFrame(
-                Duration.millis(16), // ca. 60 FPS (1000ms / 60 ≈ 16.67ms)
+                Duration.millis(16),
                 e -> {
                   remainingMillis -= 16;
                   updateDisplay();
                   if (remainingMillis <= 0) {
                     timeline.stop();
-                    // Handle timer completion
+                    handlePhaseCompletion();
                   }
                 }));
     timeline.setCycleCount(Timeline.INDEFINITE);
+  }
+
+  private void handlePhaseCompletion() {
+    isRunning = false;
+    playButton.getStyleClass().remove("pause");
+
+    if (currentPhase == PomoPhase.FOCUS) {
+
+      if (viewSwitchCallback != null) {
+        viewSwitchCallback.switchToReflection();
+        onReflectionComplete =
+            () -> {
+              completedPomodoros++;
+              if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
+                switchMode("longBreak");
+                completedPomodoros = 0;
+              } else {
+                switchMode("shortBreak");
+              }
+              startTimer();
+            };
+      }
+    } else {
+
+      switchMode("focus");
+      startTimer();
+    }
+  }
+
+  private void startTimer() {
+    Platform.runLater(
+        () -> {
+          remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
+          updateDisplay();
+          if (!isRunning) {
+            toggleTimer();
+          }
+        });
   }
 
   private void toggleTimer() {
@@ -119,11 +165,20 @@ public class TimerViewController {
     remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
     isRunning = false;
     playButton.getStyleClass().remove("pause");
+    completedPomodoros = 0;
+    currentPhase = PomoPhase.FOCUS;
+    updatePhaseButtons();
     updateDisplay();
   }
 
   private void skipTimer() {
-    // Implement skip functionality
+    timeline.stop();
+    if (currentPhase == PomoPhase.FOCUS) {
+      handlePhaseCompletion();
+    } else {
+      switchMode("focus");
+      startTimer();
+    }
   }
 
   private void switchMode(String mode) {
@@ -139,36 +194,36 @@ public class TimerViewController {
         break;
     }
 
-    // Reset timer with new duration
     remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
-    resetTimer();
 
-    // Update UI to reflect new phase
     updatePhaseButtons();
+    updateDisplay();
   }
 
   private void updatePhaseButtons() {
-    // Remove selected class from all buttons
-    focusButton.getStyleClass().remove("selected");
-    shortBreakButton.getStyleClass().remove("selected");
-    longBreakButton.getStyleClass().remove("selected");
+    Platform.runLater(
+        () -> {
+          focusButton.getStyleClass().remove("selected");
+          shortBreakButton.getStyleClass().remove("selected");
+          longBreakButton.getStyleClass().remove("selected");
+          System.out.println(currentPhase);
 
-    // Add selected class to current phase button
-    switch (currentPhase) {
-      case FOCUS:
-        focusButton.getStyleClass().add("selected");
-        break;
-      case SHORT_BREAK:
-        shortBreakButton.getStyleClass().add("selected");
-        break;
-      case LONG_BREAK:
-        longBreakButton.getStyleClass().add("selected");
-        break;
-    }
+          switch (currentPhase) {
+            case FOCUS:
+              focusButton.getStyleClass().add("selected");
+              break;
+            case SHORT_BREAK:
+              shortBreakButton.getStyleClass().add("selected");
+              break;
+            case LONG_BREAK:
+              longBreakButton.getStyleClass().add("selected");
+              break;
+          }
+        });
   }
 
   private void updateDisplay() {
-    // Update time label (still showing seconds precision)
+
     int totalSeconds = (int) (remainingMillis / MILLIS_PER_SECOND);
     int minutes = totalSeconds / 60;
     int seconds = totalSeconds % 60;
@@ -178,15 +233,13 @@ public class TimerViewController {
           timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
         });
 
-    // Smooth arc progress
-    double progress = 1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
+    double progress =
+        1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
     Platform.runLater(
         () -> {
-          //   timerArc.setStartAngle(90);
-          timerArc.setLength(-progress * 360); // Negative to go clockwise
+          timerArc.setLength(-progress * 360);
         });
 
-    // Update range label
     LocalTime now = LocalTime.now();
     LocalTime endTime = now.plusSeconds(totalSeconds);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -195,5 +248,14 @@ public class TimerViewController {
           rangeLabel.setText(
               String.format("%s → %s", now.format(formatter), endTime.format(formatter)));
         });
+  }
+
+  public void onReflectionSaved() {
+    if (onReflectionComplete != null) {
+      onReflectionComplete.run();
+    }
+    if (viewSwitchCallback != null) {
+      viewSwitchCallback.switchToMain();
+    }
   }
 }

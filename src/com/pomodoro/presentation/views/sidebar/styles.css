@@ -1,0 +1,38 @@
+.sidebar {
+    -fx-background-color: -bg-weak;
+    -fx-min-width: 60px;
+    -fx-pref-width: 60px;
+    -fx-max-width: 60px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-background-radius: 8px;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-button.active {
+    -fx-background-color: -bg-soft;
+}
+
+.icon {
+    -fx-stroke: -color-soft;
+    -fx-fill:transparent;
+    -fx-stroke-width: 2;
+}
+
+.nav-button:hover .icon {
+    -fx-stroke: -color-soft;
+    -fx-fill:transparent;
+}
+
+.nav-button.active .icon {
+    -fx-stroke: -color-weak;
+    -fx-fill:transparent;
+}

@@ -2,17 +2,6 @@
     -fx-background-color: -bg-black;
 }
 
-.phase-mode {
-    -fx-background-color: -button-bg;
-    -fx-text-fill: white;
-    -fx-background-radius: 20;
-    -fx-padding: 8 16;
-}
-
-.phase-mode.selected {
-    -fx-background-color: #3a3b3e;
-}
-
 .timer-arc {
     -fx-stroke: linear-gradient(to bottom, #FF4E02 0%, #FFB702 100%);
     -fx-stroke-width: 20;
@@ -25,9 +14,7 @@
     -fx-fill: transparent;
 }
 
-.time-label {
-    
-}
+.time-label {}
 
 .range-label {
     -fx-text-fill: rgba(151.37, 160.29, 175.42);
@@ -117,6 +104,7 @@
     -fx-spacing: 8;
 }
 
+
 .phase-mode {
     -fx-background-color: transparent;
     /* Default transparent background */
@@ -133,7 +121,7 @@
 }
 
 .phase-mode.selected {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: -bg-black;
     /* Slightly darker when selected */
 }
 

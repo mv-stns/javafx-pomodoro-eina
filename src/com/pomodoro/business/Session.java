@@ -54,7 +54,6 @@ public class Session {
     this.notes = notes;
   }
 
-  // Getters
   public LocalDateTime getStartTime() {
     return startTime;
   }
@@ -83,7 +82,6 @@ public class Session {
     return phase;
   }
 
-  // Duration calculation
   public long getDurationInSeconds() {
     if (endTime == null) return 0;
     return java.time.Duration.between(startTime, endTime).getSeconds();

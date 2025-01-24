@@ -1,8 +1,15 @@
 package com.pomodoro.presentation.views.reflection;
 
 import com.pomodoro.business.Category;
+import com.pomodoro.business.Note;
+import com.pomodoro.business.PomoPhase;
+import com.pomodoro.business.Session;
+import com.pomodoro.business.SessionManager;
+import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
+import com.pomodoro.presentation.views.timer.TimerViewController;
+import com.pomodoro.presentation.views.timer.TimerViewController.ViewSwitchCallback;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,8 +37,12 @@ public class ReflectionViewController {
 
   private ObservableList<Category> categories = FXCollections.observableArrayList();
   private ObservableList<Category> selectedCategories = FXCollections.observableArrayList();
+  private final SessionManager sessionManager = SessionManager.getInstance();
   private String selectedMood = null;
   private static final int MAX_CHARS = 500;
+  private Runnable onSaveCallback;
+  private ViewSwitchCallback viewSwitchCallback;
+  private TimerViewController timerController;
 
   @FXML
   private void initialize() {
@@ -39,6 +50,18 @@ public class ReflectionViewController {
     setupMoodSelector();
     setupCategoryComboBox();
     setupReflectionArea();
+    sessionManager
+        .currentNoteProperty()
+        .addListener(
+            (obs, oldNote, newNote) -> {
+              if (newNote != null) {
+                reflectionArea.setText(newNote.getNoteData());
+              }
+            });
+    Note currentNote = sessionManager.getCurrentNote();
+    if (currentNote != null) {
+      reflectionArea.setText(currentNote.getNoteData());
+    }
   }
 
   private void setupStyles() {
@@ -55,7 +78,7 @@ public class ReflectionViewController {
     characterCount.setFont(FontLoader.regular(12));
     characterCount.setFill(Color.web("#6F7785"));
 
-    // Add some default categories
+    
     categories.addAll(
         new Category("ENIA", false), new Category("Sem3", false), new Category("Java", false));
     categoryComboBox.setItems(categories);
@@ -81,13 +104,13 @@ public class ReflectionViewController {
     Button clickedButton = (Button) event.getSource();
     Text moodText = (Text) clickedButton.getGraphic();
 
-    // Remove selected class from all mood buttons
+    
     moodSelector.getChildren().forEach(node -> node.getStyleClass().remove("selected"));
 
-    // Add selected class to clicked button
+    
     clickedButton.getStyleClass().add("selected");
 
-    // Store selected mood and print for testing
+    
     selectedMood = moodText.getText();
     System.out.println("Selected mood: " + selectedMood);
   }
@@ -110,7 +133,7 @@ public class ReflectionViewController {
   private void setupCategoryComboBox() {
     categoryComboBox.setItems(categories);
 
-    // Add StringConverter
+    
     categoryComboBox.setConverter(
         new StringConverter<Category>() {
           @Override
@@ -125,7 +148,7 @@ public class ReflectionViewController {
           }
         });
 
-    // Handle custom category creation (when Enter is pressed)
+    
     categoryComboBox
         .getEditor()
         .setOnAction(
@@ -138,7 +161,7 @@ public class ReflectionViewController {
                   return;
                 }
 
-                // Create or get existing category
+                
                 Category newCategory = new Category(text);
                 Category existing =
                     categories.stream()
@@ -159,7 +182,7 @@ public class ReflectionViewController {
               }
             });
 
-    // Handle selection from dropdown
+    
     categoryComboBox.setOnAction(
         e -> {
           Category selected = categoryComboBox.getValue();
@@ -178,7 +201,7 @@ public class ReflectionViewController {
           }
         });
 
-    // Clear editor on focus lost
+    
     categoryComboBox
         .getEditor()
         .focusedProperty()
@@ -237,21 +260,43 @@ public class ReflectionViewController {
     if (selectedMood == null
         || selectedCategories.isEmpty()
         || reflectionArea.getText().trim().isEmpty()) {
-      // Show error message
+      showError("Bitte fülle alle Felder aus!");
       return;
     }
 
-    // TODO: Save reflection data
+    
+    Session session = new Session(PomoPhase.FOCUS);
+    session.setMood(selectedMood);
+    session.setNotes(reflectionArea.getText());
+    selectedCategories.forEach(session::addCategory);
+
+    
+    sessionManager.setCurrentSession(session);
+    sessionManager.setCurrentNote(new Note(reflectionArea.getText()));
+
+    
+    DataManager.saveSession(session);
+
+    
+    if (onSaveCallback != null) {
+      onSaveCallback.run();
+    }
+
     closeDialog();
+  }
+
+  public void setViewSwitchCallback(ViewSwitchCallback callback) {
+    this.viewSwitchCallback = callback;
   }
 
   @FXML
   private void closeDialog() {
-    // ((Stage) closeButton.getScene().getWindow()).close();
-    System.out.println("CLOSE DIALOG CALLED");
+    if (viewSwitchCallback != null) {
+      viewSwitchCallback.switchToMain();
+    }
   }
 
-  // Getters for the reflection data
+  
   public String getSelectedMood() {
     return selectedMood;
   }
@@ -279,5 +324,13 @@ public class ReflectionViewController {
   private boolean isCategoryAlreadySelected(String categoryName) {
     return selectedCategories.stream()
         .anyMatch(cat -> cat.getName().equalsIgnoreCase(categoryName.trim()));
+  }
+
+  public void setOnSave(Runnable callback) {
+    this.onSaveCallback = callback;
+  }
+
+  public void setTimerController(TimerViewController controller) {
+    this.timerController = controller;
   }
 }

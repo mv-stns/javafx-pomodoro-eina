@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.geometry.Insets?>
+
+<VBox fx:id="sidebar" styleClass="sidebar" spacing="8" xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.sidebar.SidebarController"
+    stylesheets="@styles.css">
+    <padding>
+        <Insets top="20" right="8" bottom="20" left="8" />
+    </padding>
+
+    <Button fx:id="homeButton" styleClass="nav-button" onAction="#onHomeClicked">
+        <graphic>
+            <SVGPath
+                styleClass="icon"
+                fill="transparent"
+                content="M7.48918 14.2737H14.1558M10.0039 2.41039L4.352 6.80633C3.97419 7.10018 3.78529 7.2471 3.6492 7.4311C3.52865 7.59409 3.43884 7.77771 3.3842 7.97293C3.32251 8.19332 3.32251 8.43264 3.32251 8.91127V14.9404C3.32251 15.8738 3.32251 16.3405 3.50417 16.697C3.66395 17.0106 3.91892 17.2656 4.23253 17.4254C4.58905 17.607 5.05576 17.607 5.98918 17.607H15.6558C16.5893 17.607 17.056 17.607 17.4125 17.4254C17.7261 17.2656 17.9811 17.0106 18.1409 16.697C18.3225 16.3405 18.3225 15.8738 18.3225 14.9404V8.91127C18.3225 8.43264 18.3225 8.19332 18.2608 7.97293C18.2062 7.77771 18.1164 7.59409 17.9958 7.4311C17.8597 7.2471 17.6708 7.10018 17.293 6.80633L11.6411 2.41039C11.3483 2.18268 11.2019 2.06882 11.0403 2.02506C10.8977 1.98644 10.7473 1.98644 10.6047 2.02506C10.4431 2.06882 10.2967 2.18268 10.0039 2.41039Z" />
+        </graphic>
+    </Button>
+
+    <Button fx:id="statisticsButton" styleClass="nav-button" onAction="#onStatisticsClicked">
+        <graphic>
+            <SVGPath
+                styleClass="icon"
+                fill="transparent"
+                content="M11.8225 14.7738V1.44043M1.82251 14.7738V11.4404M6.82251 14.7738V6.44043" />
+        </graphic>
+    </Button>
+
+    <VBox VBox.vgrow="ALWAYS" /> <!-- Spacer -->
+
+    <Button fx:id="settingsButton" styleClass="nav-button" onAction="#onSettingsClicked">
+        <graphic>
+            <SVGPath
+                styleClass="icon"
+                fill="transparent"
+                content="M3.32251 6.77344L13.3225 6.77344M13.3225 6.77344C13.3225 8.15415 14.4418 9.27344 15.8225 9.27344C17.2032 9.27344 18.3225 8.15415 18.3225 6.77344C18.3225 5.39273 17.2032 4.27344 15.8225 4.27344C14.4418 4.27344 13.3225 5.39273 13.3225 6.77344ZM8.32251 13.4401L18.3225 13.4401M8.32251 13.4401C8.32251 14.8208 7.20322 15.9401 5.82251 15.9401C4.4418 15.9401 3.32251 14.8208 3.32251 13.4401C3.32251 12.0594 4.4418 10.9401 5.82251 10.9401C7.20322 10.9401 8.32251 12.0594 8.32251 13.4401Z" />
+        </graphic>
+    </Button>
+</VBox>

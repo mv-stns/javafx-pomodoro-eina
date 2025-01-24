@@ -1,8 +1,8 @@
 package com.pomodoro.business;
 
 public enum PomoPhase {
-    FOCUS(25 * 60, "Fokus"),          // 25 Minuten
-    SHORT_BREAK(25, "Kurze Pause"), // 5 Minuten
+    FOCUS(25 * 60, "Fokus"),          // 25 Minuten * 60
+    SHORT_BREAK(5 * 60, "Kurze Pause"), // 5 Minuten
     LONG_BREAK(15 * 60, "Lange Pause"); // 15 Minuten
 
     private final int durationInSeconds;

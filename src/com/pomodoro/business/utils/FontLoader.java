@@ -30,7 +30,6 @@ public class FontLoader {
     Font.loadFont(FontLoader.class.getResourceAsStream(FONT_PATH + fontName), 12);
   }
 
-  // Convenience methods
   public static Font regular(double size) {
     return getFont("Geist-Regular.otf", size);
   }

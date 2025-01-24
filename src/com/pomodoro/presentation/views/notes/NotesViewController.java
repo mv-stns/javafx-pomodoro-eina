@@ -1,6 +1,7 @@
 package com.pomodoro.presentation.views.notes;
 
 import com.pomodoro.business.Note;
+import com.pomodoro.business.SessionManager;
 import com.pomodoro.business.Task;
 import com.pomodoro.business.utils.*;
 import com.pomodoro.presentation.components.LetterSpacedText;
@@ -34,6 +35,7 @@ public class NotesViewController {
   private Note currentNote;
   private ObservableList<Task> tasks = FXCollections.observableArrayList();
   private static final int MAX_CHARS = 500;
+  private final SessionManager sessionManager = SessionManager.getInstance();
 
   @FXML
   private void initialize() {
@@ -41,17 +43,27 @@ public class NotesViewController {
     setupNotesArea();
     setupTaskInput();
     loadTodaysData();
+    sessionManager
+        .currentNoteProperty()
+        .addListener(
+            (obs, oldNote, newNote) -> {
+              if (newNote != null && !newNote.getNoteData().equals(notesArea.getText())) {
+                notesArea.setText(newNote.getNoteData());
+              }
+            });
   }
 
   private void loadTodaysData() {
-    // Load notes
+    
     String savedNotes = DataManager.loadTodaysNotes();
     if (!savedNotes.isEmpty()) {
+      Note note = new Note(savedNotes);
+      currentNote = note;
+      sessionManager.setCurrentNote(note);
       notesArea.setText(savedNotes);
-      currentNote = new Note(savedNotes);
     }
 
-    // Load tasks
+    
     String savedTasks = DataManager.loadTodaysTasks();
     if (!savedTasks.isEmpty()) {
       for (String line : savedTasks.split("\n")) {
@@ -69,7 +81,7 @@ public class NotesViewController {
   }
 
   private void setupStyles() {
-    // Debug.debugNode(charContainer.getParent());
+    
     List.of(notesLabel, tasksLabel)
         .forEach(
             label -> {
@@ -86,6 +98,12 @@ public class NotesViewController {
   }
 
   private void setupNotesArea() {
+    
+    Note currentNote = sessionManager.getCurrentNote();
+    if (currentNote != null) {
+      notesArea.setText(currentNote.getNoteData());
+    }
+
     notesArea
         .textProperty()
         .addListener(
@@ -101,7 +119,7 @@ public class NotesViewController {
 
   private void saveNote(String noteText) {
     currentNote = new Note(noteText);
-    DataManager.saveTodaysNotes(noteText);
+    sessionManager.setCurrentNote(currentNote); 
   }
 
   private void saveTasks() {
@@ -146,12 +164,12 @@ public class NotesViewController {
     taskContainer.getStyleClass().add("task-item");
     taskContainer.setSpacing(8);
 
-    // Checkbox
+    
     CheckBox checkbox = new CheckBox();
     checkbox.setSelected(task.getCompleted());
     checkbox.setOnAction(e -> toggleTaskCompletion(task, taskContainer));
 
-    // Task text
+    
     LetterSpacedText taskLabel = new LetterSpacedText(task.getTaskName());
     taskLabel.setFont(FontLoader.semiBold(14.0));
     taskLabel.setLetterSpacing(-0.6);
@@ -159,7 +177,7 @@ public class NotesViewController {
     taskLabel.setAlignment(Pos.CENTER_LEFT);
     HBox.setHgrow(taskLabel, Priority.ALWAYS);
 
-    // Delete button
+    
     deleteButton = new Button();
     deleteButton.getStyleClass().add("delete-task-button");
     SVGPath deletePath = new SVGPath();
@@ -195,7 +213,7 @@ public class NotesViewController {
     saveTasks();
   }
 
-  // Getters for persistence
+  
   public Note getCurrentNote() {
     return currentNote;
   }
