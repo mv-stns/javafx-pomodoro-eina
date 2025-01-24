@@ -1,6 +1,6 @@
 package com.pomodoro;
 
-import com.pomodoro.presentation.utils.FontLoader;
+import com.pomodoro.business.utils.FontLoader;
 import java.awt.Taskbar;
 import java.io.IOException;
 import java.net.URL;
@@ -16,7 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private AnchorPane timerView, notesView;
+  private AnchorPane timerView, notesView, reflectionView;
 
   @Override
   public void init() throws IOException {
@@ -26,11 +26,12 @@ public class App extends Application {
 
   @Override
   public void start(Stage mainStage) throws Exception {
-    List.of(timerView, notesView).forEach(view -> HBox.setHgrow(view, Priority.ALWAYS));
+    List.of(timerView, notesView, reflectionView).forEach(view -> HBox.setHgrow(view, Priority.ALWAYS));
 
     HBox root = new HBox();
-    root.getChildren().addAll(timerView, notesView);
-    root.setPrefWidth(Double.MAX_VALUE);
+    // root.getChildren().addAll(timerView, notesView);
+    // root.setPrefWidth(Double.MAX_VALUE);
+    root.getChildren().add(reflectionView);
     Scene scene = new Scene(root, 1440, 800);
 
     try {
@@ -58,8 +59,10 @@ public class App extends Application {
     try {
       FXMLLoader timerLoader = loadFXML("com/pomodoro/presentation/views/timer/timerView.fxml");
       FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
+      FXMLLoader reflectionLoader = loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
       timerView = timerLoader.load();
       notesView = notesLoader.load();
+      reflectionView = reflectionLoader.load();
     } catch (IOException e) {
       System.err.println("FXML Files not Found!");
       e.printStackTrace();

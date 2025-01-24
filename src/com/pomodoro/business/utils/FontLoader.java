@@ -1,4 +1,4 @@
-package com.pomodoro.presentation.utils;
+package com.pomodoro.business.utils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,0 +1,80 @@
+.reflection-view {
+    -fx-background-color: -bg-black;
+    -fx-padding: 32;
+}
+
+.title {
+    -fx-font-family: -main-font;
+    -fx-font-size: 32;
+    -fx-fill: -text-main;
+    -fx-font-weight: 600;
+}
+
+.subtitle {
+    -fx-font-family: -main-font;
+    -fx-font-size: 16;
+    -fx-fill: rgba(255, 255, 255, 0.5);
+}
+
+.mood-button {
+    -fx-background-color: -bg-muted;
+    -fx-background-radius: 8;
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-font-size: 32;
+}
+
+.mood-button:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-combo {
+    -fx-background-color: -bg-muted;
+    -fx-text-fill: -text-main;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+.category-chips {
+    -fx-background-color: transparent;
+}
+
+.category-chip {
+    -fx-background-color: -bg-muted;
+    -fx-background-radius: 16;
+    -fx-padding: 8 12;
+    -fx-spacing: 8;
+}
+
+.reflection-area {
+    -fx-background-color: -bg-muted;
+    -fx-text-fill: -text-main;
+    -fx-font-family: -main-font;
+    -fx-background-radius: 8;
+}
+
+.save-button {
+    -fx-background-color: #FF4E02;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 12 24;
+}
+
+.close-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.remove-category {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-padding: 0 0 0 4;
+    -fx-font-size: 16;
+}
+
+.remove-category:hover {
+    -fx-text-fill: white;
+}
+
+.category-chip Label {
+    -fx-text-fill: white;
+}

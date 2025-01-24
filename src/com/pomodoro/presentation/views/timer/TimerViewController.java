@@ -1,8 +1,8 @@
 package com.pomodoro.presentation.views.timer;
 
 import com.pomodoro.business.PomoPhase;
+import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
-import com.pomodoro.presentation.utils.FontLoader;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

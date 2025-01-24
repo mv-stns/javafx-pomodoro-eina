@@ -2,17 +2,13 @@ package com.pomodoro.presentation.views.notes;
 
 import com.pomodoro.business.Note;
 import com.pomodoro.business.Task;
+import com.pomodoro.business.utils.*;
 import com.pomodoro.presentation.components.LetterSpacedText;
-import com.pomodoro.presentation.utils.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -44,7 +40,32 @@ public class NotesViewController {
     setupStyles();
     setupNotesArea();
     setupTaskInput();
-    loadNote();
+    loadTodaysData();
+  }
+
+  private void loadTodaysData() {
+    // Load notes
+    String savedNotes = DataManager.loadTodaysNotes();
+    if (!savedNotes.isEmpty()) {
+      notesArea.setText(savedNotes);
+      currentNote = new Note(savedNotes);
+    }
+
+    // Load tasks
+    String savedTasks = DataManager.loadTodaysTasks();
+    if (!savedTasks.isEmpty()) {
+      for (String line : savedTasks.split("\n")) {
+        String[] parts = line.split("\t");
+        if (parts.length >= 2) {
+          Task task = new Task(parts[0]);
+          if (Boolean.parseBoolean(parts[1])) {
+            task.setFinished();
+          }
+          tasks.add(task);
+          addTaskToView(task);
+        }
+      }
+    }
   }
 
   private void setupStyles() {
@@ -80,23 +101,15 @@ public class NotesViewController {
 
   private void saveNote(String noteText) {
     currentNote = new Note(noteText);
-    try {
-      Files.writeString(Paths.get(NOTE_FILE), noteText);
-    } catch (IOException e) {
-      System.err.println("Error saving note: " + e.getMessage());
-    }
+    DataManager.saveTodaysNotes(noteText);
   }
 
-  private void loadNote() {
-    try {
-      if (Files.exists(Paths.get(NOTE_FILE))) {
-        String savedText = Files.readString(Paths.get(NOTE_FILE));
-        notesArea.setText(savedText);
-        currentNote = new Note(savedText);
-      }
-    } catch (IOException e) {
-      System.err.println("Error loading note: " + e.getMessage());
+  private void saveTasks() {
+    StringBuilder sb = new StringBuilder();
+    for (Task task : tasks) {
+      sb.append(task.getTaskName()).append("\t").append(task.getCompleted()).append("\n");
     }
+    DataManager.saveTodaysTasks(sb.toString());
   }
 
   private void setupTaskInput() {
@@ -125,6 +138,7 @@ public class NotesViewController {
       addTaskToView(newTask);
       taskInput.clear();
     }
+    saveTasks();
   }
 
   private void addTaskToView(Task task) {
@@ -172,11 +186,13 @@ public class NotesViewController {
     } else {
       taskContainer.getStyleClass().remove("completed-task");
     }
+    saveTasks();
   }
 
   private void deleteTask(Task task, HBox taskContainer) {
     tasks.remove(task);
     taskList.getChildren().remove(taskContainer);
+    saveTasks();
   }
 
   // Getters for persistence
