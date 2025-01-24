@@ -17,10 +17,11 @@
 
 .notes-area {
     -fx-padding: 0;
-    -fx-cursor: default;
+    -fx-cursor: text;
     -fx-background-color: transparent;
     -fx-background-radius: 12;
     -fx-text-fill: -text-main;
+    -fx-highlight-text-fill: rgb(0, 55, 255);
 }
 
 .notes-area>.scroll-pane {
@@ -118,11 +119,59 @@
 
 .add-task-icon {
     -fx-fill: transparent;
-    -fx-stroke: derive(#FF4E02, 10%);
+    -fx-stroke: derive(-color-brand, 10%);
     -fx-stroke-width: 1.5;
 }
 
 .task-list {
     -fx-spacing: 8;
     -fx-padding: 8 0 0 0;
+}
+
+.check-box {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.check-box .box {
+    -fx-background-color: -bg-black;
+    -fx-border-color: -b-soft;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-insets: 2;
+}
+
+.check-box .mark {
+    -fx-background-image: url("../../../assets/unMarked.png");
+    -fx-alignment: center;
+}
+.check-box:selected .mark {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-background-image: url("../../../assets/marked.png");
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-shape: none;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -color-brand;
+    -fx-background-radius: 2;
+    -fx-border-color: -color-brand;
+}
+
+.delete-task-button {
+    -fx-cursor: hand;
+    -fx-padding: 4;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+}
+
+.delete-task-button > .delete-task-icon {
+    -fx-cursor: hand;
+    -fx-fill: white;
+}
+.delete-task-button:hover > .delete-task-icon {
+    -fx-cursor: hand;
+    -fx-fill: rgb(211, 10, 10);
 }

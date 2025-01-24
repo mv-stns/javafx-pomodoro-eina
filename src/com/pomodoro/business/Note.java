@@ -3,19 +3,23 @@ package com.pomodoro.business;
 import java.util.Date;
 
 public class Note {
-    private Date createdAt, finishedAt;
-    private String taskName;
+  private Date createdAt;
+  private String noteData;
 
-    public Note(String s) {
-        taskName = s;
-        createdAt = new Date();
-    }
+  public Note(String noteText) {
+    this.noteData = noteText;
+    this.createdAt = new Date();
+  }
 
-    public void setFinished() {
-        if (finishedAt == null) {
-            finishedAt = new Date();
-        } else {
-            finishedAt = null;
-        }
-    }
+  public String getNoteData() {
+    return noteData;
+  }
+
+  public void setNoteData(String noteData) {
+    this.noteData = noteData;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
 }
