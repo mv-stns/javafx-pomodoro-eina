@@ -1,5 +1,6 @@
 package com.pomodoro.presentation.views.timer;
 
+import com.pomodoro.business.PomoPhase;
 import com.pomodoro.presentation.components.LetterSpacedText;
 import com.pomodoro.presentation.utils.FontLoader;
 import java.time.LocalTime;
@@ -9,21 +10,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
@@ -33,16 +25,11 @@ import javafx.util.Duration;
 
 public class TimerViewController {
 
-  @FXML private Button focusButton;
-  @FXML private Button shortBreakButton;
-  @FXML private Button longBreakButton;
-  @FXML private Arc timerArc;
-  @FXML private Arc timerArcStatic;
+  @FXML private Button focusButton, shortBreakButton, longBreakButton;
+  @FXML private Arc timerArc, timerArcStatic;
   @FXML private LetterSpacedText timeLabel;
   @FXML private Label rangeLabel;
-  @FXML private Button resetButton;
-  @FXML private Button playButton;
-  @FXML private Button skipButton;
+  @FXML private Button resetButton, playButton, skipButton;
   @FXML private HBox phaseWrapper;
 
   private Timeline timeline;
@@ -50,6 +37,7 @@ public class TimerViewController {
   private double remainingMillis;
   private static final int FOCUS_TIME = 5; // 25 minutes in seconds
   private static final int MILLIS_PER_SECOND = 1000;
+  private PomoPhase currentPhase = PomoPhase.FOCUS;
 
   @FXML
   public void initialize() {
@@ -73,8 +61,6 @@ public class TimerViewController {
     // Arc Styles
     timerArc.setStrokeLineCap(StrokeLineCap.ROUND);
     timerArcStatic.setStrokeLineCap(StrokeLineCap.ROUND);
-    Rectangle rec = new Rectangle();
-    rec.setWidth(FOCUS_TIME);
     timerArc.setStrokeType(StrokeType.CENTERED);
 
     // Phase Button Styles
@@ -84,6 +70,10 @@ public class TimerViewController {
               HBox hbox = (HBox) button.getGraphic();
               ((Text) hbox.getChildren().get(1)).setFont(FontLoader.semiBold(14.0));
             });
+
+    rangeLabel.setFont(FontLoader.regular(16));
+
+    
   }
 
   private void setupButtons() {
@@ -97,7 +87,7 @@ public class TimerViewController {
   }
 
   private void setupTimer() {
-    remainingMillis = FOCUS_TIME * MILLIS_PER_SECOND;
+    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
     timeline =
         new Timeline(
             new KeyFrame(
@@ -126,7 +116,7 @@ public class TimerViewController {
 
   private void resetTimer() {
     timeline.stop();
-    remainingMillis = FOCUS_TIME * MILLIS_PER_SECOND;
+    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
     isRunning = false;
     playButton.getStyleClass().remove("pause");
     updateDisplay();
@@ -137,7 +127,44 @@ public class TimerViewController {
   }
 
   private void switchMode(String mode) {
-    // Implement mode switching logic
+    switch (mode) {
+      case "focus":
+        currentPhase = PomoPhase.FOCUS;
+        break;
+      case "shortBreak":
+        currentPhase = PomoPhase.SHORT_BREAK;
+        break;
+      case "longBreak":
+        currentPhase = PomoPhase.LONG_BREAK;
+        break;
+    }
+
+    // Reset timer with new duration
+    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
+    resetTimer();
+
+    // Update UI to reflect new phase
+    updatePhaseButtons();
+  }
+
+  private void updatePhaseButtons() {
+    // Remove selected class from all buttons
+    focusButton.getStyleClass().remove("selected");
+    shortBreakButton.getStyleClass().remove("selected");
+    longBreakButton.getStyleClass().remove("selected");
+
+    // Add selected class to current phase button
+    switch (currentPhase) {
+      case FOCUS:
+        focusButton.getStyleClass().add("selected");
+        break;
+      case SHORT_BREAK:
+        shortBreakButton.getStyleClass().add("selected");
+        break;
+      case LONG_BREAK:
+        longBreakButton.getStyleClass().add("selected");
+        break;
+    }
   }
 
   private void updateDisplay() {
@@ -152,11 +179,11 @@ public class TimerViewController {
         });
 
     // Smooth arc progress
-    double progress = 1 - (remainingMillis / (FOCUS_TIME * MILLIS_PER_SECOND));
+    double progress = 1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
     Platform.runLater(
         () -> {
-        //   timerArc.setStartAngle(90);
-          timerArc.setLength(-progress*360); // Negative to go clockwise
+          //   timerArc.setStartAngle(90);
+          timerArc.setLength(-progress * 360); // Negative to go clockwise
         });
 
     // Update range label

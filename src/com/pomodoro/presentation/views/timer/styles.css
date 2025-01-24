@@ -14,7 +14,7 @@
 }
 
 .timer-arc {
-    -fx-stroke: linear-gradient(from 0% 0% to 100% 100%, #FF4E02 0%, #FFB702 100%);
+    -fx-stroke: linear-gradient(to bottom, #FF4E02 0%, #FFB702 100%);
     -fx-stroke-width: 20;
     -fx-fill: transparent;
 }
@@ -30,8 +30,11 @@
 }
 
 .range-label {
-    -fx-text-fill: #666666;
-    -fx-font-size: 14px;
+    -fx-text-fill: rgba(151.37, 160.29, 175.42);
+    -fx-border-color: rgba(41.787, 48.198, 60.033);
+    -fx-border-width: 3;
+    -fx-border-radius: 999;
+    -fx-padding: 4 8;
 }
 
 .control-button {
@@ -40,9 +43,10 @@
     -fx-background-radius: 999;
     -fx-padding: 12 28;
     -fx-cursor: hand;
+    -fx-min-width: 132;
     -fx-min-height: 60;
     -fx-pref-height: 60;
-    -fx-font-size: 20;
+    -fx-font-size: 18;
 }
 
 .debugging {
