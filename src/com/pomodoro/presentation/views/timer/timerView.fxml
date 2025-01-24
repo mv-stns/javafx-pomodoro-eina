@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.*?>
-<?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 <?import com.pomodoro.presentation.components.LetterSpacedText?>
 

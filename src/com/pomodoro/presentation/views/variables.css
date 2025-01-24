@@ -1,6 +1,25 @@
 .root {
-    -bg-black: rgba(12.983, 18.153, 27.793);
-    -bg-muted: rgba(23.278, 27.12, 37.882);
+    -color-soft: rgba(111.59, 119.24, 133.29);
+    -color-weak: rgba(23.278, 27.12, 37.882);
+    -color-black: rgba(12.983, 18.153, 27.793);
+
+    -stroke-soft: rgba(41.787, 48.198, 60.033);
+
+    -bg-black: -color-black;
+    -bg-soft: -color-soft;
+    -bg-weak: -color-weak;
+    -bg-black: -color-black;
+    -bg-muted: -color-weak;
+    
+    -b-soft: -stroke-soft;
+    -b-weak: -color-weak;
+    -b-black: -color-black;
+    -b-muted: -color-weak;
+
     -text-main: rgba(255, 255, 255);
+    -text-soft: -color-soft;
+    -text-weak: -color-weak;
+    -text-black: -color-black;
+
     -bg-button: rgba(41.787, 48.198, 60.033);
 }

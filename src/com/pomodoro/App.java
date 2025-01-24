@@ -1,17 +1,18 @@
 package com.pomodoro;
 
 import com.pomodoro.presentation.utils.FontLoader;
-import com.pomodoro.presentation.views.timer.TimerViewController;
 import java.net.URL;
+import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private AnchorPane timerView;
+  private AnchorPane timerView, notesView;
 
   @Override
   public void init() {
@@ -20,16 +21,28 @@ public class App extends Application {
 
   @Override
   public void start(Stage mainStage) throws Exception {
-    FXMLLoader loader =
+    FXMLLoader timerLoader =
         new FXMLLoader(
             getClass()
                 .getClassLoader()
                 .getResource("com/pomodoro/presentation/views/timer/timerView.fxml"));
-    timerView = loader.load();
 
-    Scene scene = new Scene(timerView, 1440, 800);
+    FXMLLoader notesLoader =
+        new FXMLLoader(
+            getClass()
+                .getClassLoader()
+                .getResource("com/pomodoro/presentation/views/notes/notesView.fxml"));
 
-    // Add only variables.css to the scene
+    timerView = timerLoader.load();
+    notesView = notesLoader.load();
+    List.of(timerView, notesView).forEach(view -> HBox.setHgrow(view, Priority.ALWAYS));
+
+    HBox root = new HBox();
+    root.getChildren().addAll(timerView, notesView);
+    root.setPrefWidth(Double.MAX_VALUE);
+
+    Scene scene = new Scene(root, 1440, 800);
+
     try {
       URL variablesUrl =
           getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
@@ -44,6 +57,8 @@ public class App extends Application {
     }
 
     mainStage.setScene(scene);
+    mainStage.setMinHeight(590);
+    mainStage.setMinWidth(950);
     mainStage.setTitle("Pomodoro App");
     mainStage.show();
   }

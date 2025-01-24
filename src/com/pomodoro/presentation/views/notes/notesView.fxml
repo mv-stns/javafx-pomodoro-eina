@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import com.pomodoro.presentation.components.LetterSpacedText?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.notes.NotesViewController"
+    styleClass="notes-view"
+    prefWidth="400"
+    stylesheets="@styles.css"
+>
+
+    <VBox AnchorPane.topAnchor="0.0"
+        AnchorPane.bottomAnchor="0.0"
+        AnchorPane.leftAnchor="0.0"
+        AnchorPane.rightAnchor="0.0"
+        spacing="20">
+
+        <!-- Notes Section -->
+        <VBox styleClass="section">
+            <Label fx:id="notesLabel" text="NOTIZEN" styleClass="section-title" />
+            <TextArea fx:id="notesArea"
+                styleClass="notes-area"
+                wrapText="true" />
+
+
+            <HBox fx:id="charContainer" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
+                spacing="8" styleClass="character-count-container">
+                <Text fx:id="characterCount" styleClass="character-count">0/500</Text>
+                <Group>
+                    <SVGPath
+                        content="M9.93362 2.10693L2.82251 9.21804M10.8225 6.55138L7.26695 10.1069"
+                        styleClass="character-count-icon" />
+                </Group>
+            </HBox>
+
+        </VBox>
+
+        <!-- Tasks Section -->
+        <VBox styleClass="section">
+            <Label fx:id="tasksLabel" text="AUFGABEN" styleClass="section-title" />
+            <HBox styleClass="task-input-container">
+                <TextField fx:id="taskInput"
+                    promptText="Aufgabe hinzufügen..."
+                    styleClass="task-input"
+                    HBox.hgrow="ALWAYS" />
+                <Button fx:id="addTaskButton"
+                    styleClass="add-task-button">
+                    <graphic>
+                        <SVGPath content="M12 6L12 18M18 12L6 12"
+                            styleClass="add-task-icon" />
+                    </graphic>
+                </Button>
+            </HBox>
+            <VBox fx:id="taskList" styleClass="task-list" />
+        </VBox>
+
+    </VBox>
+</AnchorPane>

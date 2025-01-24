@@ -1,0 +1,128 @@
+.notes-view {
+    -fx-background-color: -bg-black;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+.section {
+    -fx-spacing: 10;
+}
+
+.section-title {
+    -fx-text-fill: -text-soft;
+    -fx-background-color: -bg-weak;
+    -fx-padding: 6 20;
+
+}
+
+.notes-area {
+    -fx-padding: 0;
+    -fx-cursor: default;
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-text-fill: -text-main;
+}
+
+.notes-area>.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+}
+
+.notes-area .content {
+    -fx-background-color: -bg-black;
+    -fx-background-radius: 12;
+    -fx-border-color: -b-soft;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+}
+
+.notes-area>.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+/* Optional: Wenn du auch die Scrollbars stylen möchtest */
+.notes-area .scroll-bar:vertical,
+.notes-area .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+
+/* .text-area>.scroll-pane {
+    -fx-background-color: null;
+}
+
+.text-area>.scroll-pane>.scroll-bar:horizontal {
+    -fx-background-radius: 0 0 12 12;
+}
+
+.text-area>.scroll-pane>.scroll-bar:vertical {
+    -fx-background-radius: 0 12 12 0;
+}
+
+.text-area>.scroll-pane>.corner {
+    -fx-background-radius: 0 0 12 0;
+} */
+
+.character-count {
+    -fx-text-fill: -text-soft;
+    -fx-fill: -text-soft;
+}
+
+.character-count-container {
+    -fx-padding: 0 12 0 0;
+    -fx-min-height: 24;
+    -fx-text-fill: -text-soft;
+    -fx-translate-y: -38;
+}
+
+.character-count-icon {
+    -fx-stroke: rgba(255, 255, 255, 0.5);
+    -fx-stroke-line-cap: round;
+    -fx-stroke-width: 1.5;
+    -fx-fill: transparent;
+}
+
+
+.task-input-container {
+    -fx-background-color: -bg-black;
+    -fx-background-radius: 12;
+    -fx-border-color: -b-soft;
+    -fx-border-radius: 12;
+    -fx-spacing: 8;
+    -fx-alignment: center;
+}
+
+.task-input {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-main;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-padding: 8 8 8 24;
+    -fx-min-height: 40;
+}
+
+.add-task-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent transparent -b-soft;
+    -fx-border-style: hidden hidden hidden solid;
+    -fx-background-radius: 0 12 12 0;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.add-task-button:hover {
+    -fx-background-color: derive(-bg-weak, 10%);
+}
+
+.add-task-icon {
+    -fx-fill: transparent;
+    -fx-stroke: derive(#FF4E02, 10%);
+    -fx-stroke-width: 1.5;
+}
+
+.task-list {
+    -fx-spacing: 8;
+    -fx-padding: 8 0 0 0;
+}
