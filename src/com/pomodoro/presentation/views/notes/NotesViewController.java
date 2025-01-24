@@ -42,7 +42,6 @@ public class NotesViewController {
               label.setFont(FontLoader.medium(12.0));
               label.setPrefWidth(Double.MAX_VALUE);
             });
-    // notesArea.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
     // Specific styles
     characterCount.setFont(FontLoader.regular(12.0));
