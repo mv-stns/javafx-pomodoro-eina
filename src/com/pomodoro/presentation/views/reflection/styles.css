@@ -17,11 +17,35 @@
 }
 
 .mood-button {
-    -fx-background-color: -bg-muted;
-    -fx-background-radius: 8;
+    -fx-background-color: transparent;
+    -fx-background-color: -bg-back;
+    -fx-border-color: -b-soft;
+    -fx-border-width: 2.5;
     -fx-min-width: 64;
     -fx-min-height: 64;
-    -fx-font-size: 32;
+    -fx-font-size: 50;
+    -fx-border-style: solid;
+}
+.mood-button:hover {
+    -fx-background-color: -bg-weak;
+    -fx-background-insets: 2;
+}
+.mood-button.selected {
+    -fx-background-color: -stroke-soft;
+    -fx-background-insets: 2;
+}
+
+#badMood {
+    -fx-border-radius: 999 0 0 999;
+    -fx-background-radius: 999 0 0 999;
+}
+#neutralMood {
+    -fx-border-style: solid hidden;
+    -fx-background-insets: 0;
+}
+#goodMood {
+    -fx-border-radius: 0 999 999 0;
+    -fx-background-radius: 0 999 999 0;
 }
 
 .mood-button:selected {

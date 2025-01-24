@@ -2,6 +2,8 @@ package com.pomodoro.presentation.views.reflection;
 
 import com.pomodoro.business.Category;
 import com.pomodoro.business.utils.FontLoader;
+import com.pomodoro.presentation.components.LetterSpacedText;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,9 +15,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class ReflectionViewController {
-  @FXML private Text titleText;
+  @FXML private LetterSpacedText titleText;
   @FXML private Text subtitleText;
   @FXML private HBox moodSelector;
   @FXML private ComboBox<Category> categoryComboBox;
@@ -39,7 +42,9 @@ public class ReflectionViewController {
   }
 
   private void setupStyles() {
-    titleText.setFont(FontLoader.semiBold(32));
+    titleText.setFont(FontLoader.bold(36));
+    titleText.setLetterSpacing(-3);
+    titleText.setAlignment(Pos.CENTER);
     subtitleText.setFont(FontLoader.regular(16));
     subtitleText.setFill(Color.web("#FFFFFF", 0.5));
 
@@ -88,32 +93,81 @@ public class ReflectionViewController {
   }
 
   private void setupCategoryComboBox() {
-    categoryComboBox.setOnAction(
-        e -> {
-          Category selected = categoryComboBox.getValue();
-          if (selected != null && !selectedCategories.contains(selected)) {
-            selectedCategories.add(selected);
-            addCategoryChip(selected);
-            categoryComboBox.setValue(null);
+    categoryComboBox.setItems(categories);
+
+    // Add StringConverter
+    categoryComboBox.setConverter(
+        new StringConverter<Category>() {
+          @Override
+          public String toString(Category category) {
+            return category != null ? category.getName() : "";
+          }
+
+          @Override
+          public Category fromString(String string) {
+            if (string == null || string.trim().isEmpty()) return null;
+            return new Category(string.trim());
           }
         });
+
+    // Handle selection changes
+    categoryComboBox
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldVal, newVal) -> {
+              if (newVal != null && !selectedCategories.contains(newVal)) {
+                selectedCategories.add(newVal);
+                addCategoryChip(newVal);
+                Platform.runLater(
+                    () -> {
+                      categoryComboBox.getSelectionModel().clearSelection();
+                      categoryComboBox.getEditor().clear();
+                    });
+              }
+            });
 
     // Handle custom category creation
     categoryComboBox
         .getEditor()
         .setOnAction(
             e -> {
-              String newCategoryName = categoryComboBox.getEditor().getText().trim();
-              if (!newCategoryName.isEmpty()) {
-                Category newCategory = new Category(newCategoryName);
-                if (!categories.contains(newCategory)) {
-                  categories.add(newCategory);
+              String text = categoryComboBox.getEditor().getText().trim();
+              if (!text.isEmpty()) {
+                // Check if category already exists
+                Category existing =
+                    categories.stream()
+                        .filter(c -> c.getName().equalsIgnoreCase(text))
+                        .findFirst()
+                        .orElse(null);
+
+                Category category = existing != null ? existing : new Category(text);
+
+                if (existing == null) {
+                  categories.add(category);
                 }
-                if (!selectedCategories.contains(newCategory)) {
-                  selectedCategories.add(newCategory);
-                  addCategoryChip(newCategory);
+
+                if (!selectedCategories.contains(category)) {
+                  selectedCategories.add(category);
+                  addCategoryChip(category);
                 }
-                categoryComboBox.setValue(null);
+
+                categoryComboBox.getEditor().clear();
+              }
+            });
+
+    // Clear editor on focus lost
+    categoryComboBox
+        .getEditor()
+        .focusedProperty()
+        .addListener(
+            (obs, wasFocused, isFocused) -> {
+              if (!isFocused) {
+                Platform.runLater(
+                    () -> {
+                      categoryComboBox.getEditor().clear();
+                      categoryComboBox.getSelectionModel().clearSelection();
+                    });
               }
             });
   }

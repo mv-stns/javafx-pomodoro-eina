@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
+<?import com.pomodoro.presentation.components.LetterSpacedText?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml"
@@ -21,24 +22,23 @@
             <Text fx:id="subtitleText"
                 text="Lass uns eine Pause einlegen und reflektieren."
                 styleClass="subtitle" />
-            <Text fx:id="titleText"
-                text="Was hast du in dieser Sitzung gelernt?"
-                styleClass="title" />
+            <LetterSpacedText fx:id="titleText"
+                text="Was hast du in dieser Sitzung gelernt?" fill="WHITE"/>
         </VBox>
 
         <!-- Mood Selection -->
-        <HBox fx:id="moodSelector" alignment="CENTER" spacing="16">
-            <Button styleClass="mood-button" onAction="#selectMood">
+        <HBox fx:id="moodSelector" alignment="CENTER">
+            <Button fx:id="badMood" styleClass="mood-button" onAction="#selectMood">
                 <graphic>
                     <Text text="😔" />
                 </graphic>
             </Button>
-            <Button styleClass="mood-button" onAction="#selectMood">
+            <Button fx:id="neutralMood" styleClass="mood-button" onAction="#selectMood">
                 <graphic>
                     <Text text="😐" />
                 </graphic>
             </Button>
-            <Button styleClass="mood-button" onAction="#selectMood">
+            <Button fx:id="goodMood" styleClass="mood-button" onAction="#selectMood">
                 <graphic>
                     <Text text="😊" />
                 </graphic>
