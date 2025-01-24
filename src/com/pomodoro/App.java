@@ -19,13 +19,13 @@ public class App extends Application {
   private AnchorPane timerView, notesView;
 
   @Override
-  public void init() {
+  public void init() throws IOException {
     FontLoader.loadFonts();
+    loadFXMLViews();
   }
 
   @Override
   public void start(Stage mainStage) throws Exception {
-    loadFXMLViews();
     List.of(timerView, notesView).forEach(view -> HBox.setHgrow(view, Priority.ALWAYS));
 
     HBox root = new HBox();
@@ -55,18 +55,19 @@ public class App extends Application {
   }
 
   private void loadFXMLViews() throws IOException {
-    FXMLLoader timerLoader = loadFXML("com/pomodoro/presentation/views/timer/timerView.fxml");
-    FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
-
-    timerView = timerLoader.load();
-    notesView = notesLoader.load();
+    try {
+      FXMLLoader timerLoader = loadFXML("com/pomodoro/presentation/views/timer/timerView.fxml");
+      FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
+      timerView = timerLoader.load();
+      notesView = notesLoader.load();
+    } catch (IOException e) {
+      System.err.println("FXML Files not Found!");
+      e.printStackTrace();
+    }
   }
 
   private FXMLLoader loadFXML(String path) {
-    return new FXMLLoader(
-        getClass()
-            .getClassLoader()
-            .getResource(path));
+    return new FXMLLoader(getClass().getClassLoader().getResource(path));
   }
 
   private void setAppIcon(Stage mainStage) {
