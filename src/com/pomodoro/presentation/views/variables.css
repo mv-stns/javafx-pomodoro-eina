@@ -12,7 +12,7 @@
     -bg-weak: -color-weak;
     -bg-black: -color-black;
     -bg-muted: -color-weak;
-    
+
     -b-soft: -stroke-soft;
     -b-weak: -color-weak;
     -b-black: -color-black;
@@ -24,4 +24,73 @@
     -text-black: -color-black;
 
     -bg-button: rgba(41.787, 48.198, 60.033);
+}
+
+.notes-area {
+    -fx-padding: 0;
+    -fx-cursor: text;
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-text-fill: -text-main;
+    -fx-highlight-text-fill: rgb(0, 55, 255);
+}
+
+.notes-area>.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+}
+
+.notes-area .content {
+    -fx-background-color: -bg-black;
+    -fx-background-radius: 12;
+    -fx-border-color: -b-soft;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+}
+
+.notes-area>.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+/* Optional: Wenn du auch die Scrollbars stylen möchtest */
+.notes-area .scroll-bar:vertical,
+.notes-area .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+
+/* .text-area>.scroll-pane {
+    -fx-background-color: null;
+}
+
+.text-area>.scroll-pane>.scroll-bar:horizontal {
+    -fx-background-radius: 0 0 12 12;
+}
+
+.text-area>.scroll-pane>.scroll-bar:vertical {
+    -fx-background-radius: 0 12 12 0;
+}
+
+.text-area>.scroll-pane>.corner {
+    -fx-background-radius: 0 0 12 0;
+} */
+
+.character-count {
+    -fx-text-fill: -text-soft;
+    -fx-fill: -text-soft;
+}
+
+.character-count-container {
+    -fx-padding: 0 12 0 0;
+    -fx-min-height: 24;
+    -fx-text-fill: -text-soft;
+    -fx-translate-y: -38;
+}
+
+.character-count-icon {
+    -fx-stroke: rgba(255, 255, 255, 0.5);
+    -fx-stroke-line-cap: round;
+    -fx-stroke-width: 1.5;
+    -fx-fill: transparent;
 }

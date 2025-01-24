@@ -1,6 +1,7 @@
 package com.pomodoro.presentation.views.reflection;
 
 import com.pomodoro.business.Category;
+import com.pomodoro.business.utils.Debug;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
 import javafx.application.Platform;
@@ -12,13 +13,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 public class ReflectionViewController {
-  @FXML private LetterSpacedText titleText;
+  @FXML private LetterSpacedText titleText, catHeader, saveButtonText;
   @FXML private Text subtitleText;
   @FXML private HBox moodSelector;
   @FXML private ComboBox<Category> categoryComboBox;
@@ -59,6 +60,21 @@ public class ReflectionViewController {
     categories.addAll(
         new Category("ENIA", false), new Category("Sem3", false), new Category("Java", false));
     categoryComboBox.setItems(categories);
+    catHeader.setFont(FontLoader.semiBold(14));
+    catHeader.setLetterSpacing(-0.6);
+
+    saveButton.setPrefHeight(Region.USE_COMPUTED_SIZE);
+    saveButton.setMaxHeight(40);
+    saveButton.setPrefWidth(Region.USE_COMPUTED_SIZE);
+    saveButtonText.setFont(FontLoader.semiBold(14));
+    saveButtonText.setLetterSpacing(-0.6);
+    saveButtonText.setAlignment(Pos.CENTER);
+    moodSelector
+        .getChildren()
+        .forEach(
+            node -> {
+              ((Button) node).setPrefWidth(500 / 3);
+            });
   }
 
   @FXML
@@ -225,7 +241,8 @@ public class ReflectionViewController {
 
   @FXML
   private void closeDialog() {
-    ((Stage) closeButton.getScene().getWindow()).close();
+    // ((Stage) closeButton.getScene().getWindow()).close();
+    System.out.println("CLOSE DIALOG CALLED");
   }
 
   // Getters for the reflection data

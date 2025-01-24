@@ -3,6 +3,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import com.pomodoro.presentation.components.LetterSpacedText?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
@@ -17,65 +30,84 @@
         AnchorPane.leftAnchor="0.0"
         AnchorPane.rightAnchor="0.0">
 
-        <!-- Header -->
         <VBox alignment="CENTER" spacing="8">
             <Text fx:id="subtitleText"
                 text="Lass uns eine Pause einlegen und reflektieren."
                 styleClass="subtitle" />
             <LetterSpacedText fx:id="titleText"
-                text="Was hast du in dieser Sitzung gelernt?" fill="WHITE"/>
+                text="Was hast du in dieser Sitzung gelernt?" fill="WHITE" />
         </VBox>
-
-        <!-- Mood Selection -->
-        <HBox fx:id="moodSelector" alignment="CENTER">
-            <Button fx:id="badMood" styleClass="mood-button" onAction="#selectMood">
-                <graphic>
-                    <Text text="😔" />
-                </graphic>
-            </Button>
-            <Button fx:id="neutralMood" styleClass="mood-button" onAction="#selectMood">
-                <graphic>
-                    <Text text="😐" />
-                </graphic>
-            </Button>
-            <Button fx:id="goodMood" styleClass="mood-button" onAction="#selectMood">
-                <graphic>
-                    <Text text="😊" />
-                </graphic>
-            </Button>
-        </HBox>
-
-        <!-- Category Section -->
-        <VBox spacing="8">
-            <Label text="Kategorie" styleClass="label-header" />
-            <ComboBox fx:id="categoryComboBox"
-                promptText="Kategorie hinzufügen"
-                styleClass="category-combo"
-                editable="true" />
-            <FlowPane fx:id="categoryChips"
-                hgap="8" vgap="8"
-                styleClass="category-chips" />
-        </VBox>
-
-        <!-- Notes Section -->
-        <VBox spacing="8" VBox.vgrow="ALWAYS">
-            <TextArea fx:id="reflectionArea"
-                wrapText="true"
-                styleClass="reflection-area"
-                VBox.vgrow="ALWAYS" />
-            <HBox alignment="CENTER_RIGHT">
-                <Text fx:id="characterCount"
-                    text="0/500"
-                    styleClass="character-count" />
+        <VBox alignment="CENTER" prefWidth="500" maxWidth="500" spacing="24">
+            <!-- Header -->
+            <!-- Mood Selection -->
+            <HBox fx:id="moodSelector" HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Button fx:id="badMood" HBox.hgrow="ALWAYS" styleClass="mood-button"
+                    onAction="#selectMood">
+                    <graphic>
+                        <Text text="😔" />
+                    </graphic>
+                </Button>
+                <Button fx:id="neutralMood" HBox.hgrow="ALWAYS" styleClass="mood-button"
+                    onAction="#selectMood">
+                    <graphic>
+                        <Text text="😐" />
+                    </graphic>
+                </Button>
+                <Button fx:id="goodMood" HBox.hgrow="ALWAYS" styleClass="mood-button"
+                    onAction="#selectMood">
+                    <graphic>
+                        <Text text="😊" />
+                    </graphic>
+                </Button>
             </HBox>
+            <!-- Category Section -->
+            <VBox spacing="8">
+                <LetterSpacedText fx:id="catHeader" text="Kategorie" fill="WHITE"
+                    styleClass="label-header" />
+                <ComboBox fx:id="categoryComboBox"
+                    promptText="Kategorie hinzufügen"
+                    styleClass="category-combo"
+                    editable="true" />
+                <FlowPane fx:id="categoryChips"
+                    hgap="8" vgap="8"
+                    styleClass="category-chips" />
+            </VBox>
+            <!-- Notes Section -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <TextArea fx:id="reflectionArea"
+                    wrapText="true"
+                    styleClass="notes-area"
+                    VBox.vgrow="ALWAYS" />
+                <HBox fx:id="charContainer" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
+                    spacing="8" styleClass="character-count-container">
+                    <Text fx:id="characterCount" styleClass="character-count">0/500</Text>
+                    <Group>
+                        <SVGPath
+                            content="M9.93362 2.10693L2.82251 9.21804M10.8225 6.55138L7.26695 10.1069"
+                            styleClass="character-count-icon" />
+                    </Group>
+                </HBox>
+            </VBox>
         </VBox>
 
         <!-- Action Buttons -->
         <HBox alignment="CENTER" spacing="16">
             <Button fx:id="saveButton"
-                text="Info speichern"
                 styleClass="save-button"
-                onAction="#saveReflection" />
+                onAction="#saveReflection">
+                <graphic>
+                    <HBox alignment="CENTER" spacing="8">
+                        <LetterSpacedText fx:id="saveButtonText"
+                            text="Info Speichern"
+                            fill="WHITE"
+                            maxWidth="120"
+                            maxHeight="40" />
+                        <SVGPath
+                            content="M6.57251 15.25V10.75H14.0725V15.25H15.5725V6.871L13.4515 4.75H5.07251V15.25H6.57251ZM4.32251 3.25L14.0725 3.25L17.0725 6.25V16C17.0725 16.1989 16.9935 16.3897 16.8528 16.5303C16.7122 16.671 16.5214 16.75 16.3225 16.75H4.32251C4.1236 16.75 3.93283 16.671 3.79218 16.5303C3.65153 16.3897 3.57251 16.1989 3.57251 16L3.57251 4C3.57251 3.80109 3.65153 3.61032 3.79218 3.46967C3.93283 3.32902 4.1236 3.25 4.32251 3.25V3.25ZM8.07251 12.25V15.25H12.5725V12.25H8.07251Z"
+                            styleClass="add-task-icon" />
+                    </HBox>
+                </graphic>
+            </Button>
             <Button fx:id="closeButton"
                 styleClass="close-button"
                 onAction="#closeDialog" />

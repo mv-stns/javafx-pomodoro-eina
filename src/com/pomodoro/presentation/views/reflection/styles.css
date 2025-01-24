@@ -26,11 +26,13 @@
     -fx-font-size: 50;
     -fx-border-style: solid;
 }
+
 .mood-button:hover {
     -fx-background-color: -bg-weak;
     -fx-background-insets: 2;
 }
-.mood-button.selected {
+
+.selected {
     -fx-background-color: -stroke-soft;
     -fx-background-insets: 2;
 }
@@ -39,10 +41,12 @@
     -fx-border-radius: 999 0 0 999;
     -fx-background-radius: 999 0 0 999;
 }
+
 #neutralMood {
     -fx-border-style: solid hidden;
     -fx-background-insets: 0;
 }
+
 #goodMood {
     -fx-border-radius: 0 999 999 0;
     -fx-background-radius: 0 999 999 0;
@@ -78,10 +82,18 @@
 
 .save-button {
     -fx-background-color: #FF4E02;
-    -fx-text-fill: white;
     -fx-background-radius: 8;
     -fx-padding: 12 24;
 }
+
+.save-button .add-task-icon {
+    -fx-fill: white;
+}
+
+.save-button HBox {
+    -fx-alignment: center;
+}
+
 
 .close-button {
     -fx-background-color: transparent;
@@ -101,4 +113,50 @@
 
 .category-chip Label {
     -fx-text-fill: white;
+}
+
+.label-header {
+    -fx-text-fill: -white;
+}
+
+#categoryComboBox {
+    -fx-background-color: transparent;
+    -fx-border-color: -stroke-soft;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 10 10 10 12;
+}
+
+#categoryComboBox>* {
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: -text-main;
+    -fx-text-fill: -text-main;
+}
+
+#categoryComboBox .arrow,
+#categoryComboBox .arrow-button {
+    -fx-background-color: transparent;
+}
+
+
+/* this part is from  default stiles fxrt.jar!/com/sun/javafx/scene/control/skin/caspian/caspian.css */
+#categoryComboBox:hover {
+    /* -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color; */
+    -fx-background-color: -bg-weak;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    /* -fx-padding: 0; */
+}
+
+#categoryComboBox:showing>.arrow-button {
+    -fx-color: transparent;
+    -fx-background-color: transparent;
+}
+
+/* ------- ARROW* ------- */
+#categoryComboBox>.arrow-button>.arrow {
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-background-color: -color-soft;
+    -fx-padding: 0.166667em 0.333333em 0.166667em 0.333333em;
+    -fx-shape: "M5.48369 3.879L9.19619 0.166504L10.2567 1.227L5.48369 6L0.710693 1.227L1.77119 0.166504L5.48369 3.879Z";
 }

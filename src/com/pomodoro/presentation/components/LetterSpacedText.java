@@ -4,6 +4,7 @@ import javafx.beans.DefaultProperty;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
