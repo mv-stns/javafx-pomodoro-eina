@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private AnchorPane timerView, notesView, reflectionView, settingsView;
+  private AnchorPane timerView, notesView, reflectionView, settingsView, statisticsView;
   private TimerViewController timerViewController;
   private VBox sidebarView;
   private StackPane contentArea;
@@ -85,6 +85,7 @@ public class App extends Application {
       FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
       FXMLLoader reflectionLoader = loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
       FXMLLoader settingsLoader = loadFXML("com/pomodoro/presentation/views/settings/settingsView.fxml");
+      FXMLLoader statisticsLoader = loadFXML("com/pomodoro/presentation/views/statistics/statisticsView.fxml");
 
       sidebarView = sidebarLoader.load();
       SidebarController sidebarController = sidebarLoader.getController();
@@ -102,6 +103,7 @@ public class App extends Application {
       notesView = notesLoader.load();
       reflectionView = reflectionLoader.load();
       settingsView = settingsLoader.load();
+      statisticsView = statisticsLoader.load();
 
       timerViewController = timerLoader.getController();
       ReflectionViewController reflectionController = reflectionLoader.getController();
@@ -167,6 +169,7 @@ public class App extends Application {
 
   private void showStatisticsView() {
     contentArea.getChildren().clear();
+    contentArea.getChildren().add(statisticsView);
   }
 
   private void showSettingsView() {

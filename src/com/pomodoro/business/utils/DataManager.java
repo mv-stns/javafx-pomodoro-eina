@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,48 +154,88 @@ public class DataManager {
 
   private static Session loadSession(Path sessionDir) {
     try {
-      List<String> lines = Files.readAllLines(sessionDir.resolve("session.txt"));
-      Session session = null;
+      Path sessionFile = sessionDir.resolve("session.txt");
+      if (!Files.exists(sessionFile)) {
+        return null;
+      }
+
+      List<String> lines = Files.readAllLines(sessionFile);
       Map<String, String> metadata = new HashMap<>();
 
       // Erst alle Metadaten sammeln
       for (String line : lines) {
         String[] parts = line.split("=", 2);
         if (parts.length == 2) {
-          metadata.put(parts[0], parts[1]);
+          String key = parts[0].trim();
+          String value = parts[1].trim();
+          if (!value.equals("null") && !value.isEmpty()) {
+            metadata.put(key, value);
+          }
         }
       }
 
-      // Session erstellen wenn Phase vorhanden
-      if (metadata.containsKey("phase")) {
-        PomoPhase phase = PomoPhase.valueOf(metadata.get("phase"));
-        session = new Session(phase);
+      // Prüfe ob notwendige Daten vorhanden sind
+      if (!metadata.containsKey("phase")) {
+        return null;
+      }
 
-        // Alle Metadaten setzen
+      try {
+        PomoPhase phase = PomoPhase.valueOf(metadata.get("phase"));
+        Session session = new Session(phase);
+
+        // Setze die Metadaten, nur wenn sie gültig sind
         if (metadata.containsKey("startTime")) {
-          session.setStartTime(LocalDateTime.parse(metadata.get("startTime")));
+          try {
+            session.setStartTime(LocalDateTime.parse(metadata.get("startTime")));
+          } catch (DateTimeParseException e) {
+            System.err.println("Error parsing startTime: " + e.getMessage());
+          }
         }
+
         if (metadata.containsKey("endTime")) {
-          session.setEndTime(LocalDateTime.parse(metadata.get("endTime")));
+          try {
+            session.setEndTime(LocalDateTime.parse(metadata.get("endTime")));
+          } catch (DateTimeParseException e) {
+            System.err.println("Error parsing endTime: " + e.getMessage());
+          }
         }
+
         if (metadata.containsKey("status")) {
-          session.setStatus(Session.SessionStatus.valueOf(metadata.get("status")));
+          try {
+            session.setStatus(Session.SessionStatus.valueOf(metadata.get("status")));
+          } catch (IllegalArgumentException e) {
+            System.err.println("Error parsing status: " + e.getMessage());
+          }
         }
+
         if (metadata.containsKey("mood")) {
           session.setMood(metadata.get("mood"));
         }
+
         if (metadata.containsKey("targetDuration")) {
-          session.setTargetDurationSeconds(Integer.parseInt(metadata.get("targetDuration")));
+          try {
+            session.setTargetDurationSeconds(Integer.parseInt(metadata.get("targetDuration")));
+          } catch (NumberFormatException e) {
+            System.err.println("Error parsing targetDuration: " + e.getMessage());
+          }
         }
+
         if (metadata.containsKey("actualDuration")) {
-          session.setActualDurationSeconds(Integer.parseInt(metadata.get("actualDuration")));
+          try {
+            session.setActualDurationSeconds(Integer.parseInt(metadata.get("actualDuration")));
+          } catch (NumberFormatException e) {
+            System.err.println("Error parsing actualDuration: " + e.getMessage());
+          }
         }
+
         if (metadata.containsKey("completed")) {
           session.setCompleted(Boolean.parseBoolean(metadata.get("completed")));
         }
+
         if (metadata.containsKey("interruptionReason")) {
           session.setInterruptionReason(metadata.get("interruptionReason"));
         }
+
         if (metadata.containsKey("categories")) {
           String[] categoryNames = metadata.get("categories").split(",");
           for (String name : categoryNames) {
@@ -203,21 +244,96 @@ public class DataManager {
             }
           }
         }
-      }
 
-      // Notizen laden
-      Path notesPath = sessionDir.resolve("notes.txt");
-      if (Files.exists(notesPath)) {
-        String notes = Files.readString(notesPath);
-        session.setNotes(notes);
-      }
+        // Lade Notizen, falls vorhanden
+        Path notesPath = sessionDir.resolve("notes.txt");
+        if (Files.exists(notesPath)) {
+          String notes = Files.readString(notesPath);
+          if (notes != null && !notes.isEmpty()) {
+            session.setNotes(notes);
+          }
+        }
 
-      return session;
+        return session;
+
+      } catch (Exception e) {
+        System.err.println("Error creating session from metadata: " + e.getMessage());
+        return null;
+      }
 
     } catch (IOException e) {
-      System.err.println("Error loading session: " + e.getMessage());
+      System.err.println("Error loading session from " + sessionDir + ": " + e.getMessage());
       return null;
     }
+  }
+
+  public static List<Session> loadSessionsForDate(LocalDate date) {
+    List<Session> sessions = new ArrayList<>();
+    try {
+      Path dateDir = Paths.get(BASE_DIR, date.format(DATE_FORMAT));
+      if (!Files.exists(dateDir)) {
+        return sessions;
+      }
+
+      // Durchsuche alle Unterverzeichnisse des Datums
+      Files.list(dateDir)
+          .filter(path -> Files.isDirectory(path))
+          .forEach(sessionDir -> {
+            Session session = loadSession(sessionDir);
+            if (session != null) {
+              sessions.add(session);
+            }
+          });
+
+    } catch (IOException e) {
+      System.err.println("Error loading sessions for date " + date + ": " + e.getMessage());
+    }
+    return sessions;
+  }
+
+  public static List<Session> loadAllSessions() {
+    List<Session> allSessions = new ArrayList<>();
+    try {
+      Path baseDir = Paths.get(BASE_DIR);
+      if (!Files.exists(baseDir)) {
+        return allSessions;
+      }
+
+      // Durchsuche alle Datumsverzeichnisse
+      Files.list(baseDir)
+          .filter(path -> Files.isDirectory(path))
+          .forEach(dateDir -> {
+            try {
+              // Durchsuche alle Session-Verzeichnisse des Datums
+              Files.list(dateDir)
+                  .filter(path -> Files.isDirectory(path))
+                  .forEach(sessionDir -> {
+                    Session session = loadSession(sessionDir);
+                    if (session != null) {
+                      allSessions.add(session);
+                    }
+                  });
+            } catch (IOException e) {
+              System.err.println("Error loading sessions from directory " + dateDir + ": " + e.getMessage());
+            }
+          });
+
+    } catch (IOException e) {
+      System.err.println("Error loading all sessions: " + e.getMessage());
+    }
+    return allSessions;
+  }
+
+  public static List<Session> loadSessionsForLastDays(int days) {
+    List<Session> sessions = new ArrayList<>();
+    LocalDate today = LocalDate.now();
+
+    for (int i = 0; i < days; i++) {
+      LocalDate date = today.minusDays(i);
+      sessions.addAll(loadSessionsForDate(date));
+    }
+
+    return sessions;
   }
 
 }
