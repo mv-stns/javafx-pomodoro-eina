@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private AnchorPane timerView, notesView, reflectionView;
+  private AnchorPane timerView, notesView, reflectionView, settingsView;
   private TimerViewController timerViewController;
   private VBox sidebarView;
   private StackPane contentArea;
@@ -80,12 +80,11 @@ public class App extends Application {
   private void loadFXMLViews() throws IOException {
     try {
 
-      FXMLLoader sidebarLoader =
-          loadFXML("com/pomodoro/presentation/views/sidebar/sidebarView.fxml");
+      FXMLLoader sidebarLoader = loadFXML("com/pomodoro/presentation/views/sidebar/sidebarView.fxml");
       FXMLLoader timerLoader = loadFXML("com/pomodoro/presentation/views/timer/timerView.fxml");
       FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
-      FXMLLoader reflectionLoader =
-          loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
+      FXMLLoader reflectionLoader = loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
+      FXMLLoader settingsLoader = loadFXML("com/pomodoro/presentation/views/settings/settingsView.fxml");
 
       sidebarView = sidebarLoader.load();
       SidebarController sidebarController = sidebarLoader.getController();
@@ -102,26 +101,27 @@ public class App extends Application {
       timerView = timerLoader.load();
       notesView = notesLoader.load();
       reflectionView = reflectionLoader.load();
+      settingsView = settingsLoader.load();
+
       timerViewController = timerLoader.getController();
       ReflectionViewController reflectionController = reflectionLoader.getController();
       reflectionController.setTimerController(timerViewController);
 
-      ViewSwitchCallback viewSwitchCallback =
-          new TimerViewController.ViewSwitchCallback() {
-            @Override
-            public void switchToReflection() {
-              contentArea.getChildren().clear();
-              contentArea.getChildren().add(reflectionView);
-            }
+      ViewSwitchCallback viewSwitchCallback = new TimerViewController.ViewSwitchCallback() {
+        @Override
+        public void switchToReflection() {
+          contentArea.getChildren().clear();
+          contentArea.getChildren().add(reflectionView);
+        }
 
-            @Override
-            public void switchToMain() {
-              contentArea.getChildren().clear();
-              HBox mainViewContainer = new HBox();
-              mainViewContainer.getChildren().addAll(timerView, notesView);
-              contentArea.getChildren().add(mainViewContainer);
-            }
-          };
+        @Override
+        public void switchToMain() {
+          contentArea.getChildren().clear();
+          HBox mainViewContainer = new HBox();
+          mainViewContainer.getChildren().addAll(timerView, notesView);
+          contentArea.getChildren().add(mainViewContainer);
+        }
+      };
 
       reflectionController.setOnSave(
           () -> {
@@ -139,12 +139,10 @@ public class App extends Application {
 
   private void loadStylesheets(Scene scene) {
     try {
-      URL variablesUrl =
-          getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
-      URL sidebarStylesUrl =
-          getClass()
-              .getClassLoader()
-              .getResource("com/pomodoro/presentation/views/sidebar/styles.css");
+      URL variablesUrl = getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
+      URL sidebarStylesUrl = getClass()
+          .getClassLoader()
+          .getResource("com/pomodoro/presentation/views/sidebar/styles.css");
 
       if (variablesUrl == null) {
         throw new IllegalStateException("Could not find variables.css");
@@ -173,6 +171,7 @@ public class App extends Application {
 
   private void showSettingsView() {
     contentArea.getChildren().clear();
+    contentArea.getChildren().add(settingsView);
   }
 
   private FXMLLoader loadFXML(String path) {

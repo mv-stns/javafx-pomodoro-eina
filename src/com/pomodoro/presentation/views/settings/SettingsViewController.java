@@ -2,7 +2,7 @@ package com.pomodoro.presentation.views.settings;
 
 import com.pomodoro.presentation.views.Controller;
 
-public class SettingsViewController extends Controller<SettingsView> {
+public class SettingsViewController {
     public SettingsViewController() {
         
         initialize();

@@ -30,7 +30,7 @@
         </graphic>
     </Button>
 
-    <VBox VBox.vgrow="ALWAYS" /> <!-- Spacer -->
+    <VBox VBox.vgrow="ALWAYS" />
 
     <Button fx:id="settingsButton" styleClass="nav-button" onAction="#onSettingsClicked">
         <graphic>

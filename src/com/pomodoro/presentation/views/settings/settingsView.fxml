@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import com.pomodoro.presentation.components.LetterSpacedText?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.settings.SettingsViewController"
+    styleClass="settings-view"
+    stylesheets="@styles.css">
+
+    <VBox spacing="20" AnchorPane.topAnchor="0.0"
+        AnchorPane.bottomAnchor="0.0"
+        AnchorPane.leftAnchor="0.0"
+        AnchorPane.rightAnchor="0.0">
+
+        <!-- Session Settings Section -->
+        <VBox styleClass="settings-section">
+            <Label text="Session" styleClass="section-title" />
+            <fx:include source="sessionSettings/sessionSettingsView.fxml" />
+        </VBox>
+
+        <!-- Ambient Sounds Section -->
+        <VBox styleClass="settings-section">
+            <Label text="Hintergrundgeräusche" styleClass="section-title" />
+            <fx:include source="ambientSettings/ambientSettingsView.fxml" />
+        </VBox>
+    </VBox>
+</AnchorPane>
