@@ -20,6 +20,7 @@
 		"prefix": "bimp",
 		"body": [
 			"<?import javafx.scene.layout.*?>",
+			"<?import javafx.scene.shape.SVGPath?>",
 			"<?import javafx.scene.control.*?>",
 			"<?import javafx.scene.text.*?>",
 			"<?import javafx.scene.Group?>",

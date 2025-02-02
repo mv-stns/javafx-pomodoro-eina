@@ -22,24 +22,63 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml"
     fx:controller="com.pomodoro.presentation.views.settings.SettingsViewController"
+    fx:id="settingsWrapper"
     styleClass="settings-view"
     stylesheets="@styles.css">
 
-    <VBox spacing="20" AnchorPane.topAnchor="0.0"
+    <HBox AnchorPane.topAnchor="0.0"
         AnchorPane.bottomAnchor="0.0"
         AnchorPane.leftAnchor="0.0"
         AnchorPane.rightAnchor="0.0">
 
-        <!-- Session Settings Section -->
-        <VBox styleClass="settings-section">
-            <Label text="Session" styleClass="section-title" />
-            <fx:include source="sessionSettings/sessionSettingsView.fxml" />
+        <!-- Left Sidebar -->
+        <VBox styleClass="settings-sidebar" spacing="8">
+            <Button fx:id="sessionButton"
+                styleClass="sidebar-button"
+                onAction="#showSessionSettings">
+                <graphic>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <SVGPath
+                            styleClass="icon"
+                            content="M8 15.5C3.85775 15.5 0.5 12.1422 0.5 8C0.5 3.85775 3.85775 0.5 8 0.5C12.1422 0.5 15.5 3.85775 15.5 8C15.5 12.1422 12.1422 15.5 8 15.5ZM8.75 8V4.25H7.25V9.5H11.75V8H8.75Z" />
+                        <Text styleClass="nav-item" text="Session" />
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <SVGPath
+                            styleClass="chev"
+                            content="M3.79575 4.99956L0.083252 1.28706L1.14375 0.226562L5.91675 4.99956L1.14375 9.77256L0.083252 8.71206L3.79575 4.99956Z" />
+                    </HBox>
+                </graphic>
+            </Button>
+            <Button fx:id="ambientButton"
+                styleClass="sidebar-button"
+                onAction="#showAmbientSettings">
+                <graphic>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <SVGPath
+                            styleClass="icon"
+                            content="M5 8.15125V0.25L11 0.25V2.5L6.5 2.5V10.75C6.49986 11.4104 6.28182 12.0522 5.8797 12.5761C5.47759 13.0999 4.91387 13.4764 4.27597 13.6472C3.63807 13.818 2.96164 13.7736 2.35157 13.5208C1.74149 13.268 1.23188 12.821 0.90176 12.249C0.571637 11.6771 0.439451 11.0122 0.525703 10.3575C0.611954 9.70278 0.911822 9.09482 1.3788 8.62789C1.84578 8.16096 2.45378 7.86116 3.10851 7.77498C3.76324 7.6888 4.4281 7.82106 5 8.15125V8.15125Z" />
+                        <Text styleClass="nav-item" text="Hintergrundgeräusche" />
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <SVGPath
+                            styleClass="chev"
+                            content="M3.79575 4.99956L0.083252 1.28706L1.14375 0.226562L5.91675 4.99956L1.14375 9.77256L0.083252 8.71206L3.79575 4.99956Z" />
+                    </HBox>
+                </graphic>
+            </Button>
         </VBox>
 
-        <!-- Ambient Sounds Section -->
-        <VBox styleClass="settings-section">
-            <Label text="Hintergrundgeräusche" styleClass="section-title" />
-            <fx:include source="ambientSettings/ambientSettingsView.fxml" />
-        </VBox>
-    </VBox>
+        <!-- Main Content Area -->
+        <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+            <!-- Session Settings -->
+            <VBox fx:id="sessionSettingsView" styleClass="settings-content" VBox.vgrow="ALWAYS">
+                <fx:include source="./sessionSettings/sessionView.fxml" />
+            </VBox>
+
+            <!-- Ambient Settings -->
+            <VBox fx:id="ambientSettingsView" styleClass="settings-content" visible="false"
+                VBox.vgrow="ALWAYS">
+                <fx:include source="./ambientSettings/ambientView.fxml" />
+            </VBox>
+        </StackPane>
+    </HBox>
 </AnchorPane>

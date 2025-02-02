@@ -6,9 +6,12 @@ import com.pomodoro.business.Session;
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataManager {
   private static final String BASE_DIR = "tomodoro_data";
@@ -80,34 +83,41 @@ public class DataManager {
 
   public static void saveSession(Session session) {
     try {
-      
       String sessionDirName = session.getStartTime().format(TIME_FORMAT);
       Path sessionDir = getSessionDir().resolve(sessionDirName);
       Files.createDirectories(sessionDir);
 
-      
       StringBuilder metadata = new StringBuilder();
       metadata.append("startTime=").append(session.getStartTime()).append("\n");
       metadata.append("endTime=").append(session.getEndTime()).append("\n");
       metadata.append("status=").append(session.getStatus()).append("\n");
-      metadata.append("mood=").append(session.getMood()).append("\n");
       metadata.append("phase=").append(session.getPhase()).append("\n");
+      metadata.append("targetDuration=").append(session.getTargetDurationSeconds()).append("\n");
+      metadata.append("actualDuration=").append(session.getActualDurationSeconds()).append("\n");
+      metadata.append("completed=").append(session.isCompleted()).append("\n");
 
-      
+      if (session.getInterruptionReason() != null) {
+        metadata.append("interruptionReason=").append(session.getInterruptionReason()).append("\n");
+      }
+
+      if (session.getMood() != null) {
+        metadata.append("mood=").append(session.getMood()).append("\n");
+      }
+
+      // Kategorien speichern
       metadata.append("categories=");
       List<Category> categories = session.getCategories();
-      for (int i = 0; i < categories.size(); i++) {
-        metadata.append(categories.get(i).getName());
-        if (i < categories.size() - 1) {
-          metadata.append(",");
-        }
+      if (!categories.isEmpty()) {
+        metadata.append(String.join(",",
+            categories.stream()
+                .map(Category::getName)
+                .toList()));
       }
       metadata.append("\n");
 
-      
       Files.writeString(sessionDir.resolve("session.txt"), metadata.toString());
 
-      
+      // Notizen speichern
       if (session.getNotes() != null && !session.getNotes().isEmpty()) {
         Files.writeString(sessionDir.resolve("notes.txt"), session.getNotes());
       }
@@ -125,7 +135,6 @@ public class DataManager {
         return sessions;
       }
 
-      
       Files.list(todayDir)
           .filter(path -> Files.isDirectory(path))
           .forEach(
@@ -144,41 +153,59 @@ public class DataManager {
 
   private static Session loadSession(Path sessionDir) {
     try {
-      
       List<String> lines = Files.readAllLines(sessionDir.resolve("session.txt"));
       Session session = null;
+      Map<String, String> metadata = new HashMap<>();
 
-      
+      // Erst alle Metadaten sammeln
       for (String line : lines) {
         String[] parts = line.split("=", 2);
-        if (parts.length != 2) continue;
+        if (parts.length == 2) {
+          metadata.put(parts[0], parts[1]);
+        }
+      }
 
-        String key = parts[0];
-        String value = parts[1];
+      // Session erstellen wenn Phase vorhanden
+      if (metadata.containsKey("phase")) {
+        PomoPhase phase = PomoPhase.valueOf(metadata.get("phase"));
+        session = new Session(phase);
 
-        if (key.equals("phase")) {
-          session = new Session(PomoPhase.valueOf(value));
-        } else if (session != null) {
-          switch (key) {
-            case "status":
-              
-              break;
-            case "mood":
-              session.setMood(value);
-              break;
-            case "categories":
-              if (!value.isEmpty()) {
-                String[] categoryNames = value.split(",");
-                for (String name : categoryNames) {
-                  session.addCategory(new Category(name));
-                }
-              }
-              break;
+        // Alle Metadaten setzen
+        if (metadata.containsKey("startTime")) {
+          session.setStartTime(LocalDateTime.parse(metadata.get("startTime")));
+        }
+        if (metadata.containsKey("endTime")) {
+          session.setEndTime(LocalDateTime.parse(metadata.get("endTime")));
+        }
+        if (metadata.containsKey("status")) {
+          session.setStatus(Session.SessionStatus.valueOf(metadata.get("status")));
+        }
+        if (metadata.containsKey("mood")) {
+          session.setMood(metadata.get("mood"));
+        }
+        if (metadata.containsKey("targetDuration")) {
+          session.setTargetDurationSeconds(Integer.parseInt(metadata.get("targetDuration")));
+        }
+        if (metadata.containsKey("actualDuration")) {
+          session.setActualDurationSeconds(Integer.parseInt(metadata.get("actualDuration")));
+        }
+        if (metadata.containsKey("completed")) {
+          session.setCompleted(Boolean.parseBoolean(metadata.get("completed")));
+        }
+        if (metadata.containsKey("interruptionReason")) {
+          session.setInterruptionReason(metadata.get("interruptionReason"));
+        }
+        if (metadata.containsKey("categories")) {
+          String[] categoryNames = metadata.get("categories").split(",");
+          for (String name : categoryNames) {
+            if (!name.isEmpty()) {
+              session.addCategory(new Category(name));
+            }
           }
         }
       }
 
-      
+      // Notizen laden
       Path notesPath = sessionDir.resolve("notes.txt");
       if (Files.exists(notesPath)) {
         String notes = Files.readString(notesPath);
@@ -192,4 +219,5 @@ public class DataManager {
       return null;
     }
   }
+
 }

@@ -22,10 +22,11 @@
     xmlns:fx="http://javafx.com/fxml"
     fx:controller="com.pomodoro.presentation.views.settings.ambientSettings.AmbientSettingsViewController"
     styleClass="ambient-settings"
+    VBox.vgrow="ALWAYS"
     spacing="20">
 
     <!-- Nature Sounds -->
-    <VBox spacing="10">
+    <VBox fx:id="box" spacing="10">
         <Label text="NATUR" styleClass="section-title" />
         <FlowPane hgap="10" vgap="10">
             <Button fx:id="riverButton" text="Fluss"
@@ -45,7 +46,7 @@
 
     <!-- Rain Sounds -->
     <VBox spacing="10">
-        <Label text="REGEN" styleClass="category-label" />
+        <Label text="REGEN" styleClass="section-title" />
         <FlowPane hgap="10" vgap="10">
             <Button fx:id="lightRainButton" text="Leichter Regen"
                 styleClass="sound-button" onAction="#toggleSound" />

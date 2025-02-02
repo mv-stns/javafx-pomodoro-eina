@@ -1,6 +1,7 @@
 .root {
     -white: rgba(255, 255, 255);
     -color-soft: rgba(111.59, 119.24, 133.29);
+    -color-sub: rgba(153, 160, 174, 1);
     -color-weak: rgba(23.278, 27.12, 37.882);
     -color-black: rgba(12.983, 18.153, 27.793);
     -color-brand: #FF4E02;

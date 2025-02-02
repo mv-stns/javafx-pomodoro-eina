@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.settings.sessionSettings.SessionSettingsViewController"
+    styleClass="session-settings"
+    spacing="24">
+
+    <!-- Focus Duration -->
+    <VBox styleClass="setting-group" spacing="12">
+        <Label text="Fokus-Zeit" styleClass="setting-title" />
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Spinner fx:id="focusDurationSpinner"
+                styleClass="duration-spinner"
+                prefWidth="100" />
+            <Label text="Minuten" styleClass="unit-label" />
+        </HBox>
+    </VBox>
+
+    <!-- Short Break Duration -->
+    <VBox styleClass="setting-group" spacing="12">
+        <Label text="Kurze Pause" styleClass="setting-title" />
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Spinner fx:id="shortBreakDurationSpinner"
+                styleClass="duration-spinner"
+                prefWidth="100" />
+            <Label text="Minuten" styleClass="unit-label" />
+        </HBox>
+    </VBox>
+
+    <!-- Long Break Duration -->
+    <VBox styleClass="setting-group" spacing="12">
+        <Label text="Lange Pause" styleClass="setting-title" />
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Spinner fx:id="longBreakDurationSpinner"
+                styleClass="duration-spinner"
+                prefWidth="100" />
+            <Label text="Minuten" styleClass="unit-label" />
+        </HBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="12" styleClass="actions-container">
+        <Button fx:id="resetButton"
+            text="Zurücksetzen"
+            onAction="#handleReset"
+            styleClass="secondary-button" />
+        <Button fx:id="saveButton"
+            text="Speichern"
+            onAction="#handleSave"
+            styleClass="primary-button" />
+    </HBox>
+</VBox>

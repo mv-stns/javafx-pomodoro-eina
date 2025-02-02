@@ -1,6 +1,8 @@
 package com.pomodoro.presentation.views.timer;
 
 import com.pomodoro.business.PomoPhase;
+import com.pomodoro.business.Session;
+import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
 import java.time.LocalTime;
@@ -24,12 +26,18 @@ import javafx.util.Duration;
 
 public class TimerViewController {
 
-  @FXML private Button focusButton, shortBreakButton, longBreakButton;
-  @FXML private Arc timerArc, timerArcStatic;
-  @FXML private LetterSpacedText timeLabel;
-  @FXML private Label rangeLabel;
-  @FXML private Button resetButton, playButton, skipButton;
-  @FXML private HBox phaseWrapper;
+  @FXML
+  private Button focusButton, shortBreakButton, longBreakButton;
+  @FXML
+  private Arc timerArc, timerArcStatic;
+  @FXML
+  private LetterSpacedText timeLabel;
+  @FXML
+  private Label rangeLabel;
+  @FXML
+  private Button resetButton, playButton, skipButton;
+  @FXML
+  private HBox phaseWrapper;
 
   private Timeline timeline;
   private boolean isRunning = false;
@@ -41,6 +49,7 @@ public class TimerViewController {
   private boolean isInBreak = false;
   private ViewSwitchCallback viewSwitchCallback;
   private Runnable onReflectionComplete;
+  private Session currentSession;
 
   public interface ViewSwitchCallback {
     void switchToReflection();
@@ -94,20 +103,37 @@ public class TimerViewController {
     longBreakButton.setOnAction(e -> switchMode("longBreak"));
   }
 
+  private void startNewSession() {
+    currentSession = new Session(currentPhase);
+  }
+
+  private void completeSession() {
+    if (currentSession != null) {
+      currentSession.complete();
+      DataManager.saveSession(currentSession);
+    }
+  }
+
+  private void interruptSession(String reason) {
+    if (currentSession != null) {
+      currentSession.interrupt(reason);
+      DataManager.saveSession(currentSession);
+    }
+  }
+
   private void setupTimer() {
     remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
-    timeline =
-        new Timeline(
-            new KeyFrame(
-                Duration.millis(16),
-                e -> {
-                  remainingMillis -= 16;
-                  updateDisplay();
-                  if (remainingMillis <= 0) {
-                    timeline.stop();
-                    handlePhaseCompletion();
-                  }
-                }));
+    timeline = new Timeline(
+        new KeyFrame(
+            Duration.millis(16),
+            e -> {
+              remainingMillis -= 16;
+              updateDisplay();
+              if (remainingMillis <= 0) {
+                timeline.stop();
+                handlePhaseCompletion();
+              }
+            }));
     timeline.setCycleCount(Timeline.INDEFINITE);
   }
 
@@ -115,21 +141,24 @@ public class TimerViewController {
     isRunning = false;
     playButton.getStyleClass().remove("pause");
 
+    if (currentSession != null) {
+      completeSession();
+    }
+
     if (currentPhase == PomoPhase.FOCUS) {
 
       if (viewSwitchCallback != null) {
         viewSwitchCallback.switchToReflection();
-        onReflectionComplete =
-            () -> {
-              completedPomodoros++;
-              if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
-                switchMode("longBreak");
-                completedPomodoros = 0;
-              } else {
-                switchMode("shortBreak");
-              }
-              startTimer();
-            };
+        onReflectionComplete = () -> {
+          completedPomodoros++;
+          if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
+            switchMode("longBreak");
+            completedPomodoros = 0;
+          } else {
+            switchMode("shortBreak");
+          }
+          startTimer();
+        };
       }
     } else {
 
@@ -173,6 +202,10 @@ public class TimerViewController {
 
   private void skipTimer() {
     timeline.stop();
+    if (currentSession != null) {
+      interruptSession("Manually skipped");
+    }
+
     if (currentPhase == PomoPhase.FOCUS) {
       handlePhaseCompletion();
     } else {
@@ -233,8 +266,7 @@ public class TimerViewController {
           timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
         });
 
-    double progress =
-        1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
+    double progress = 1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
     Platform.runLater(
         () -> {
           timerArc.setLength(-progress * 360);
