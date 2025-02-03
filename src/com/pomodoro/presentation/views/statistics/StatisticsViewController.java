@@ -1,6 +1,5 @@
 package com.pomodoro.presentation.views.statistics;
 
-import com.pomodoro.business.Session;
 import com.pomodoro.business.utils.StatisticsAnalyzer;
 import com.pomodoro.business.utils.DailyStats;
 import com.pomodoro.business.utils.DataManager;
@@ -8,14 +7,12 @@ import com.pomodoro.business.utils.FontLoader;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 

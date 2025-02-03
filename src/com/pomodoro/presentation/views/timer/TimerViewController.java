@@ -3,7 +3,6 @@ package com.pomodoro.presentation.views.timer;
 import com.pomodoro.business.PomoPhase;
 import com.pomodoro.business.Session;
 import com.pomodoro.business.audio.AudioManager;
-import com.pomodoro.business.audio.Sound;
 import com.pomodoro.business.config.AppConfig;
 import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
@@ -51,12 +50,9 @@ public class TimerViewController {
   private PomoPhase currentPhase = PomoPhase.FOCUS;
   private static final int POMODOROS_UNTIL_LONG_BREAK = 3;
   private int completedPomodoros = 0;
-  private boolean isInBreak = false;
   private ViewSwitchCallback viewSwitchCallback;
   private Runnable onReflectionComplete;
   private Session currentSession;
-  private AudioManager audioManager;
-  private Sound pauseSound;
   private SimpleAudioPlayer pausePlayer;
 
   public interface ViewSwitchCallback {
@@ -97,7 +93,7 @@ public class TimerViewController {
   }
 
   private void setupAudio() {
-    audioManager = new AudioManager();
+    new AudioManager();
     SimpleMinim minim = new SimpleMinim();
     pausePlayer = minim.loadMP3File("src/resources/audio/Pause.mp3");
   }
@@ -261,7 +257,6 @@ public class TimerViewController {
   }
 
   private void switchMode(String mode) {
-    boolean wasInFocus = currentPhase == PomoPhase.FOCUS;
 
     switch (mode) {
       case "focus":

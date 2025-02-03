@@ -1,9 +1,7 @@
 package com.pomodoro.business.utils;
 
 import com.pomodoro.business.Session;
-import com.pomodoro.business.Category;
 import com.pomodoro.business.PomoPhase;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;

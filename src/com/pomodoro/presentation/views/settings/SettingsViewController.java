@@ -1,15 +1,10 @@
 package com.pomodoro.presentation.views.settings;
 
-import com.pomodoro.business.utils.Debug;
-import com.pomodoro.business.utils.FontLoader;
-import java.util.List;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class SettingsViewController {
     @FXML

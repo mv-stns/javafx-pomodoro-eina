@@ -2,13 +2,11 @@ package com.pomodoro.presentation.views.reflection;
 
 import com.pomodoro.business.Category;
 import com.pomodoro.business.Note;
-import com.pomodoro.business.PomoPhase;
 import com.pomodoro.business.Session;
 import com.pomodoro.business.SessionManager;
 import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
-import com.pomodoro.presentation.views.timer.TimerViewController;
 import com.pomodoro.presentation.views.timer.TimerViewController.ViewSwitchCallback;
 import java.time.LocalDate;
 import java.util.HashSet;

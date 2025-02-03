@@ -2,13 +2,10 @@ package com.pomodoro.business.audio;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SoundManager {
     private static final String SONG_DIRECTORY = "src/resources/audio";
-    private static final String PAUSE_SOUND = "Pause.mp3";
     private List<Sound> sounds;
     private boolean initialized = false;
 
