@@ -49,7 +49,7 @@
         <HBox spacing="24" VBox.vgrow="ALWAYS">
             <!-- Weekly Progress -->
             <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
-                <Label text="Wöchentlicher Fortschritt" styleClass="chart-title" />
+                <Label text="Wöchentlicher Statistik" styleClass="chart-title" />
                 <BarChart fx:id="weeklyChart" legendVisible="false">
                     <xAxis>
                         <CategoryAxis label="Tag" />
@@ -64,6 +64,7 @@
             <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
                 <Label text="Kategorie-Verteilung" styleClass="chart-title" />
                 <PieChart fx:id="categoryChart" />
+                <Label text="Daten vom heutigen Tag" styleClass="chart-legend" HBox.hgrow="ALWAYS" />
             </VBox>
         </HBox>
 

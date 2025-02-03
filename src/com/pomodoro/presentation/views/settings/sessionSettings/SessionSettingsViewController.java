@@ -48,7 +48,7 @@ public class SessionSettingsViewController {
 
     @FXML
     private void handleReset() {
-        AppConfig.resetToDefaults();
+        AppConfig.loadDefaultDurations();;
         initialize(); // Spinner auf Standardwerte zurücksetzen
     }
 }

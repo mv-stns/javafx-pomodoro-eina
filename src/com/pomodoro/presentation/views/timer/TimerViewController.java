@@ -2,6 +2,7 @@ package com.pomodoro.presentation.views.timer;
 
 import com.pomodoro.business.PomoPhase;
 import com.pomodoro.business.Session;
+import com.pomodoro.business.config.AppConfig;
 import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
@@ -67,6 +68,25 @@ public class TimerViewController {
     setupButtons();
     setupTimer();
     updateDisplay();
+
+    // Listener für Änderungen der Dauer
+    AppConfig.focusDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.FOCUS) {
+        onConfigChanged();
+      }
+    });
+
+    AppConfig.shortBreakDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.SHORT_BREAK) {
+        onConfigChanged();
+      }
+    });
+
+    AppConfig.longBreakDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.LONG_BREAK) {
+        onConfigChanged();
+      }
+    });
   }
 
   private void setupStyles() {
@@ -122,7 +142,14 @@ public class TimerViewController {
   }
 
   private void setupTimer() {
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
+    // Hole die aktuelle Dauer aus AppConfig basierend auf der Phase
+    int durationInSeconds = switch (currentPhase) {
+      case FOCUS -> AppConfig.FOCUS_DURATION;
+      case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION;
+      case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION;
+    };
+
+    remainingMillis = durationInSeconds * MILLIS_PER_SECOND;
     timeline = new Timeline(
         new KeyFrame(
             Duration.millis(16),
@@ -191,13 +218,14 @@ public class TimerViewController {
 
   private void resetTimer() {
     timeline.stop();
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
+    remainingMillis = AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
     isRunning = false;
     playButton.getStyleClass().remove("pause");
     completedPomodoros = 0;
     currentPhase = PomoPhase.FOCUS;
     updatePhaseButtons();
     updateDisplay();
+    updateTimerArc();
   }
 
   private void skipTimer() {
@@ -218,19 +246,21 @@ public class TimerViewController {
     switch (mode) {
       case "focus":
         currentPhase = PomoPhase.FOCUS;
+        remainingMillis = AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
         break;
       case "shortBreak":
         currentPhase = PomoPhase.SHORT_BREAK;
+        remainingMillis = AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
         break;
       case "longBreak":
         currentPhase = PomoPhase.LONG_BREAK;
+        remainingMillis = AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
         break;
     }
 
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
-
     updatePhaseButtons();
     updateDisplay();
+    updateTimerArc();
   }
 
   private void updatePhaseButtons() {
@@ -255,31 +285,54 @@ public class TimerViewController {
         });
   }
 
-  private void updateDisplay() {
+  private void updateTimerArc() {
+    // Berechne die Gesamtdauer in Millisekunden für die aktuelle Phase
+    double totalDuration = switch (currentPhase) {
+      case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
+      case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+      case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+    };
 
+    // Berechne den Fortschritt basierend auf der neuen Gesamtdauer
+    double progress = 1 - (remainingMillis / totalDuration);
+
+    Platform.runLater(() -> {
+      timerArc.setLength(-progress * 360);
+    });
+  }
+
+  private void updateDisplay() {
     int totalSeconds = (int) (remainingMillis / MILLIS_PER_SECOND);
     int minutes = totalSeconds / 60;
     int seconds = totalSeconds % 60;
 
-    Platform.runLater(
-        () -> {
-          timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
-        });
-
-    double progress = 1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
-    Platform.runLater(
-        () -> {
-          timerArc.setLength(-progress * 360);
-        });
+    Platform.runLater(() -> {
+      timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
+      updateTimerArc(); // Aktualisiere den Arc bei jedem Display-Update
+    });
 
     LocalTime now = LocalTime.now();
     LocalTime endTime = now.plusSeconds(totalSeconds);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-    Platform.runLater(
-        () -> {
-          rangeLabel.setText(
-              String.format("%s → %s", now.format(formatter), endTime.format(formatter)));
-        });
+    Platform.runLater(() -> {
+      rangeLabel.setText(
+          String.format("%s → %s", now.format(formatter), endTime.format(formatter)));
+    });
+  }
+
+  public void onConfigChanged() {
+    if (!isRunning) {
+      // Aktualisiere remainingMillis basierend auf der neuen Konfiguration
+      remainingMillis = switch (currentPhase) {
+        case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
+        case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+        case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+      };
+
+      // Aktualisiere Display und Arc
+      updateDisplay();
+      updateTimerArc();
+    }
   }
 
   public void onReflectionSaved() {

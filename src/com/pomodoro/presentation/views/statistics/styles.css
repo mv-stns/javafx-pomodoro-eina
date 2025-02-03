@@ -163,6 +163,9 @@
 
 .chart-legend {
     -fx-background-color: transparent;
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-soft;
+    -fx-text-alignment: right;
 }
 
 .chart-legend-item {
