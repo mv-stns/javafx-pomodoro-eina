@@ -2,10 +2,14 @@ package com.pomodoro.presentation.views.timer;
 
 import com.pomodoro.business.PomoPhase;
 import com.pomodoro.business.Session;
+import com.pomodoro.business.audio.AudioManager;
+import com.pomodoro.business.audio.Sound;
 import com.pomodoro.business.config.AppConfig;
 import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
+import de.hsrm.mi.eibo.simpleplayer.SimpleAudioPlayer;
+import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,6 +55,9 @@ public class TimerViewController {
   private ViewSwitchCallback viewSwitchCallback;
   private Runnable onReflectionComplete;
   private Session currentSession;
+  private AudioManager audioManager;
+  private Sound pauseSound;
+  private SimpleAudioPlayer pausePlayer;
 
   public interface ViewSwitchCallback {
     void switchToReflection();
@@ -68,6 +75,7 @@ public class TimerViewController {
     setupButtons();
     setupTimer();
     updateDisplay();
+    setupAudio();
 
     // Listener für Änderungen der Dauer
     AppConfig.focusDurationProperty().addListener((obs, oldVal, newVal) -> {
@@ -87,6 +95,12 @@ public class TimerViewController {
         onConfigChanged();
       }
     });
+  }
+
+  private void setupAudio() {
+    audioManager = new AudioManager();
+    SimpleMinim minim = new SimpleMinim();
+    pausePlayer = minim.loadMP3File("src/resources/audio/Pause.mp3");
   }
 
   private void setupStyles() {
@@ -173,6 +187,8 @@ public class TimerViewController {
     }
 
     if (currentPhase == PomoPhase.FOCUS) {
+      // Spiele den Pausensound ab, wenn der Fokus-Timer endet
+      playPauseSound();
 
       if (viewSwitchCallback != null) {
         viewSwitchCallback.switchToReflection();
@@ -188,7 +204,6 @@ public class TimerViewController {
         };
       }
     } else {
-
       switchMode("focus");
       startTimer();
     }
@@ -243,6 +258,8 @@ public class TimerViewController {
   }
 
   private void switchMode(String mode) {
+    boolean wasInFocus = currentPhase == PomoPhase.FOCUS;
+
     switch (mode) {
       case "focus":
         currentPhase = PomoPhase.FOCUS;
@@ -251,16 +268,32 @@ public class TimerViewController {
       case "shortBreak":
         currentPhase = PomoPhase.SHORT_BREAK;
         remainingMillis = AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+        if (wasInFocus) {
+          playPauseSound();
+        }
         break;
       case "longBreak":
         currentPhase = PomoPhase.LONG_BREAK;
         remainingMillis = AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+        if (wasInFocus) {
+          playPauseSound();
+        }
         break;
     }
 
     updatePhaseButtons();
     updateDisplay();
-    updateTimerArc();
+  }
+
+  private void playPauseSound() {
+    if (pausePlayer != null) {
+      new Thread() {
+        public void run() {
+          pausePlayer.rewind();
+          pausePlayer.play();
+        }
+      }.start();
+    }
   }
 
   private void updatePhaseButtons() {
