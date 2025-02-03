@@ -7,11 +7,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class SettingsViewController {
-
     @FXML
     private Button sessionButton, ambientButton;
 
@@ -19,41 +19,54 @@ public class SettingsViewController {
     private VBox sessionSettingsView, ambientSettingsView;
 
     @FXML
+    private StackPane contentArea;
+
+    @FXML
     private AnchorPane settingsWrapper;
 
     @FXML
     public void initialize() {
-        setStyling();
-        sessionButton.getStyleClass().add("active");
-        showSessionSettings();
+        // Initial state
+        if (sessionSettingsView != null && ambientSettingsView != null) {
+            sessionSettingsView.setVisible(true);
+            ambientSettingsView.setVisible(false);
+        } else {
+            System.err.println("ERROR: Views not properly initialized!");
+        }
+
+        // Set initial active button
+        if (sessionButton != null) {
+            sessionButton.getStyleClass().add("active");
+        }
     }
 
     @FXML
     private void showSessionSettings() {
-        Platform.runLater(() -> {
+        if (sessionSettingsView != null && ambientSettingsView != null) {
             sessionSettingsView.setVisible(true);
             ambientSettingsView.setVisible(false);
             setActiveButton(sessionButton);
-        });
+        } else {
+            System.err.println("ERROR: Cannot show session settings - views not initialized");
+        }
     }
 
     @FXML
     private void showAmbientSettings() {
-        Platform.runLater(() -> {
+        if (sessionSettingsView != null && ambientSettingsView != null) {
             sessionSettingsView.setVisible(false);
             ambientSettingsView.setVisible(true);
             setActiveButton(ambientButton);
-        });
-    }
-
-    private void setStyling() {
-        settingsWrapper.lookupAll(".nav-item").stream().forEach(node -> {
-            ((Button) node).setFont(FontLoader.medium(14));
-        });
+        } else {
+            System.err.println("ERROR: Cannot show ambient settings - views not initialized");
+        }
     }
 
     private void setActiveButton(Button activeButton) {
-        List.of(sessionButton, ambientButton).forEach(button -> button.getStyleClass().remove("active"));
-        activeButton.getStyleClass().add("active");
+        if (sessionButton != null && ambientButton != null) {
+            sessionButton.getStyleClass().remove("active");
+            ambientButton.getStyleClass().remove("active");
+            activeButton.getStyleClass().add("active");
+        }
     }
 }

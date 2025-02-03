@@ -69,14 +69,10 @@
 
         <!-- Main Content Area -->
         <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
-            <!-- Session Settings -->
-            <VBox fx:id="sessionSettingsView" styleClass="settings-content" VBox.vgrow="ALWAYS">
+            <VBox fx:id="sessionSettingsView" styleClass="settings-content">
                 <fx:include source="./sessionSettings/sessionView.fxml" />
             </VBox>
-
-            <!-- Ambient Settings -->
-            <VBox fx:id="ambientSettingsView" styleClass="settings-content" visible="false"
-                VBox.vgrow="ALWAYS">
+            <VBox fx:id="ambientSettingsView" styleClass="settings-content">
                 <fx:include source="./ambientSettings/ambientView.fxml" />
             </VBox>
         </StackPane>

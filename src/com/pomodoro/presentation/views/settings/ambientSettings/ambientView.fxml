@@ -3,20 +3,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import com.pomodoro.presentation.components.LetterSpacedText?>
 
 <VBox xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml"
@@ -26,7 +12,7 @@
     spacing="20">
 
     <!-- Nature Sounds -->
-    <VBox fx:id="box" spacing="10">
+    <VBox spacing="10">
         <Label text="NATUR" styleClass="section-title" />
         <FlowPane hgap="10" vgap="10">
             <Button fx:id="riverButton" text="Fluss"
