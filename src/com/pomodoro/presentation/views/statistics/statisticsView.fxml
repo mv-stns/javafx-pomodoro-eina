@@ -75,7 +75,7 @@
                 <columns>
                     <TableColumn fx:id="dateColumn" text="Datum" />
                     <TableColumn fx:id="sessionsColumn" text="Sessions" />
-                    <TableColumn fx:id="focusTimeColumn" text="Fokus-Zeit" />
+                    <TableColumn fx:id="focusTimeColumn" text="Fokus-Zeit (min)" />
                     <TableColumn fx:id="completionColumn" text="Erfolgsrate" />
                 </columns>
             </TableView>

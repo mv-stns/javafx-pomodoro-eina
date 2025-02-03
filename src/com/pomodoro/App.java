@@ -107,7 +107,6 @@ public class App extends Application {
 
       timerViewController = timerLoader.getController();
       ReflectionViewController reflectionController = reflectionLoader.getController();
-      reflectionController.setTimerController(timerViewController);
 
       ViewSwitchCallback viewSwitchCallback = new TimerViewController.ViewSwitchCallback() {
         @Override

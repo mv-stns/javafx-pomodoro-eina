@@ -23,7 +23,6 @@ def create_session_data(timestamp, is_completed=True):
         "completed": str(is_completed).lower()
     }
     
-    # Erzeuge realistische Notizen basierend auf den Kategorien
     notes = []
     selected_categories = session_data["categories"].split(",")
     
@@ -31,13 +30,13 @@ def create_session_data(timestamp, is_completed=True):
         notes.append("- ENIA Vorlesung nachgearbeitet")
         notes.append("- Übungsaufgaben gelöst")
     if "Sem3" in selected_categories:
-        notes.append("- Seminar Präsentation vorbereitet")
+        notes.append("- Präsentation vorbereitet")
         notes.append("- Literatur recherchiert")
     if "Java" in selected_categories:
-        notes.append("- Spring Boot Implementierung")
+        notes.append("- JavaFX Implementierung")
         notes.append("- Unit Tests geschrieben")
     
-    notes = "\n".join(notes) if notes else "Keine Notizen"
+    notes = "\n".join(notes) if notes else ""
     
     return session_data, notes
 

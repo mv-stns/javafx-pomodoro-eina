@@ -268,16 +268,16 @@ public class TimerViewController {
       case "shortBreak":
         currentPhase = PomoPhase.SHORT_BREAK;
         remainingMillis = AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
-        if (wasInFocus) {
-          playPauseSound();
-        }
+        // if (wasInFocus) {
+        //   playPauseSound();
+        // }
         break;
       case "longBreak":
         currentPhase = PomoPhase.LONG_BREAK;
         remainingMillis = AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
-        if (wasInFocus) {
-          playPauseSound();
-        }
+        // if (wasInFocus) {
+        //   playPauseSound();
+        // }
         break;
     }
 
