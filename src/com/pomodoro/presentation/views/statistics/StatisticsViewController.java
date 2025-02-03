@@ -49,8 +49,15 @@ public class StatisticsViewController {
     @FXML
     public void initialize() {
         setupFonts();
+        weeklyChart.setAnimated(false);
+        categoryChart.setAnimated(false);
         loadStatistics();
         setupTable();
+        updateCharts();
+    }
+
+    public void refreshData() {
+        loadStatistics();
         updateCharts();
     }
 
@@ -64,7 +71,7 @@ public class StatisticsViewController {
         List<DailyStats> weekStats = StatisticsAnalyzer.analyzePastWeek();
         DailyStats todayStats = weekStats.get(weekStats.size() - 1);
 
-        // Update overview cards
+
         todaySessionsLabel.setText(String.valueOf(todayStats.getCompletedSessions()));
 
         long weeklyFocusHours = weekStats.stream()
@@ -78,7 +85,6 @@ public class StatisticsViewController {
                 .orElse(0.0);
         completionRateLabel.setText(String.format("%.1f%%", avgCompletionRate));
 
-        // Update table
         detailsTable.setItems(FXCollections.observableArrayList(weekStats));
     }
 
@@ -109,7 +115,7 @@ public class StatisticsViewController {
     }
 
     private void updateCharts() {
-        // Weekly progress chart
+
         List<DailyStats> weekStats = StatisticsAnalyzer.analyzePastWeek();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
 
@@ -118,16 +124,19 @@ public class StatisticsViewController {
                     stats.getDate().format(DateTimeFormatter.ofPattern("EE")),
                     stats.getCompletedSessions()));
         }
+
+
+        weeklyChart.getData().clear();
         weeklyChart.getData().add(series);
 
-        // Category distribution chart
+
         Map<String, Integer> categoryStats = StatisticsAnalyzer.getMostUsedCategories(
                 DataManager.loadTodaysSessions());
 
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         categoryStats.forEach((category, count) -> pieChartData.add(new PieChart.Data(category, count)));
 
+
         categoryChart.setData(pieChartData);
     }
-
 }

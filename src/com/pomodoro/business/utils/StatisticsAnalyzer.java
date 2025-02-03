@@ -56,7 +56,7 @@ public class StatisticsAnalyzer {
                 totalSeconds += session.getActualDurationSeconds();
             }
         }
-        return totalSeconds / 60; // Konvertierung in Minuten
+        return totalSeconds / 60;
     }
 
     public static List<Session> getCompletedSessions(List<Session> sessions) {

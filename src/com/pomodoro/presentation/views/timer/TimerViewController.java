@@ -77,7 +77,6 @@ public class TimerViewController {
     updateDisplay();
     setupAudio();
 
-    // Listener für Änderungen der Dauer
     AppConfig.focusDurationProperty().addListener((obs, oldVal, newVal) -> {
       if (currentPhase == PomoPhase.FOCUS) {
         onConfigChanged();
@@ -156,7 +155,7 @@ public class TimerViewController {
   }
 
   private void setupTimer() {
-    // Hole die aktuelle Dauer aus AppConfig basierend auf der Phase
+
     int durationInSeconds = switch (currentPhase) {
       case FOCUS -> AppConfig.FOCUS_DURATION;
       case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION;
@@ -187,11 +186,12 @@ public class TimerViewController {
     }
 
     if (currentPhase == PomoPhase.FOCUS) {
-      // Spiele den Pausensound ab, wenn der Fokus-Timer endet
+
       playPauseSound();
 
       if (viewSwitchCallback != null) {
         viewSwitchCallback.switchToReflection();
+
         onReflectionComplete = () -> {
           completedPomodoros++;
           if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
@@ -227,6 +227,9 @@ public class TimerViewController {
     } else {
       timeline.play();
       playButton.getStyleClass().add("pause");
+      if (currentSession == null) {
+        startNewSession();
+      }
     }
     isRunning = !isRunning;
   }
@@ -268,16 +271,12 @@ public class TimerViewController {
       case "shortBreak":
         currentPhase = PomoPhase.SHORT_BREAK;
         remainingMillis = AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
-        // if (wasInFocus) {
-        //   playPauseSound();
-        // }
+
         break;
       case "longBreak":
         currentPhase = PomoPhase.LONG_BREAK;
         remainingMillis = AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
-        // if (wasInFocus) {
-        //   playPauseSound();
-        // }
+
         break;
     }
 
@@ -302,7 +301,6 @@ public class TimerViewController {
           focusButton.getStyleClass().remove("selected");
           shortBreakButton.getStyleClass().remove("selected");
           longBreakButton.getStyleClass().remove("selected");
-          System.out.println(currentPhase);
 
           switch (currentPhase) {
             case FOCUS:
@@ -319,14 +317,13 @@ public class TimerViewController {
   }
 
   private void updateTimerArc() {
-    // Berechne die Gesamtdauer in Millisekunden für die aktuelle Phase
+
     double totalDuration = switch (currentPhase) {
       case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
       case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
       case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
     };
 
-    // Berechne den Fortschritt basierend auf der neuen Gesamtdauer
     double progress = 1 - (remainingMillis / totalDuration);
 
     Platform.runLater(() -> {
@@ -341,7 +338,7 @@ public class TimerViewController {
 
     Platform.runLater(() -> {
       timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
-      updateTimerArc(); // Aktualisiere den Arc bei jedem Display-Update
+      updateTimerArc();
     });
 
     LocalTime now = LocalTime.now();
@@ -355,14 +352,13 @@ public class TimerViewController {
 
   public void onConfigChanged() {
     if (!isRunning) {
-      // Aktualisiere remainingMillis basierend auf der neuen Konfiguration
+
       remainingMillis = switch (currentPhase) {
         case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
         case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
         case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
       };
 
-      // Aktualisiere Display und Arc
       updateDisplay();
       updateTimerArc();
     }

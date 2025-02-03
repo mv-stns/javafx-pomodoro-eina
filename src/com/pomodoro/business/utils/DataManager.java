@@ -105,7 +105,7 @@ public class DataManager {
         metadata.append("mood=").append(session.getMood()).append("\n");
       }
 
-      // Kategorien speichern
+
       metadata.append("categories=");
       List<Category> categories = session.getCategories();
       if (!categories.isEmpty()) {
@@ -118,7 +118,7 @@ public class DataManager {
 
       Files.writeString(sessionDir.resolve("session.txt"), metadata.toString());
 
-      // Notizen speichern
+
       if (session.getNotes() != null && !session.getNotes().isEmpty()) {
         Files.writeString(sessionDir.resolve("notes.txt"), session.getNotes());
       }
@@ -162,7 +162,7 @@ public class DataManager {
       List<String> lines = Files.readAllLines(sessionFile);
       Map<String, String> metadata = new HashMap<>();
 
-      // Erst alle Metadaten sammeln
+
       for (String line : lines) {
         String[] parts = line.split("=", 2);
         if (parts.length == 2) {
@@ -174,7 +174,7 @@ public class DataManager {
         }
       }
 
-      // Prüfe ob notwendige Daten vorhanden sind
+
       if (!metadata.containsKey("phase")) {
         return null;
       }
@@ -183,7 +183,7 @@ public class DataManager {
         PomoPhase phase = PomoPhase.valueOf(metadata.get("phase"));
         Session session = new Session(phase);
 
-        // Setze die Metadaten, nur wenn sie gültig sind
+
         if (metadata.containsKey("startTime")) {
           try {
             session.setStartTime(LocalDateTime.parse(metadata.get("startTime")));
@@ -245,7 +245,7 @@ public class DataManager {
           }
         }
 
-        // Lade Notizen, falls vorhanden
+
         Path notesPath = sessionDir.resolve("notes.txt");
         if (Files.exists(notesPath)) {
           String notes = Files.readString(notesPath);
@@ -275,7 +275,7 @@ public class DataManager {
         return sessions;
       }
 
-      // Durchsuche alle Unterverzeichnisse des Datums
+
       Files.list(dateDir)
           .filter(path -> Files.isDirectory(path))
           .forEach(sessionDir -> {
@@ -299,12 +299,12 @@ public class DataManager {
         return allSessions;
       }
 
-      // Durchsuche alle Datumsverzeichnisse
+
       Files.list(baseDir)
           .filter(path -> Files.isDirectory(path))
           .forEach(dateDir -> {
             try {
-              // Durchsuche alle Session-Verzeichnisse des Datums
+
               Files.list(dateDir)
                   .filter(path -> Files.isDirectory(path))
                   .forEach(sessionDir -> {

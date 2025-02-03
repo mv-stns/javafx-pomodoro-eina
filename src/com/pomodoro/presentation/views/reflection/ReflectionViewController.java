@@ -55,6 +55,7 @@ public class ReflectionViewController {
   private static final int MAX_CHARS = 500;
   private Runnable onSaveCallback;
   private ViewSwitchCallback viewSwitchCallback;
+  private Runnable onCloseWithoutSaving;
 
   @FXML
   private void initialize() {
@@ -122,7 +123,6 @@ public class ReflectionViewController {
     clickedButton.getStyleClass().add("selected");
 
     selectedMood = moodText.getText();
-    System.out.println("Selected mood: " + selectedMood);
   }
 
   private void setupMoodSelector() {
@@ -154,18 +154,18 @@ public class ReflectionViewController {
           public Category fromString(String string) {
             if (string == null || string.trim().isEmpty())
               return null;
-            return new Category(string.trim(), true); // Neue Kategorien sind löschbar
+            return new Category(string.trim(), true);
           }
         });
 
-    // Verhindere Auswahl bereits selektierter Kategorien
+
     categoryComboBox.setOnShowing(e -> {
       ObservableList<Category> availableCategories = FXCollections.observableArrayList(categories);
       availableCategories.removeAll(selectedCategories);
       categoryComboBox.setItems(availableCategories);
     });
 
-    // Setze die vollständige Liste zurück, wenn die ComboBox geschlossen wird
+
     categoryComboBox.setOnHidden(e -> {
       categoryComboBox.setItems(categories);
     });
@@ -279,15 +279,20 @@ public class ReflectionViewController {
       return;
     }
 
-    Session session = new Session(PomoPhase.FOCUS);
-    session.setMood(selectedMood);
-    session.setNotes(reflectionArea.getText());
-    selectedCategories.forEach(session::addCategory);
 
-    sessionManager.setCurrentSession(session);
-    sessionManager.setCurrentNote(new Note(reflectionArea.getText()));
+    Session currentSession = sessionManager.getCurrentSession();
+    if (currentSession != null) {
+      currentSession.setMood(selectedMood);
+      currentSession.setNotes(reflectionArea.getText());
+      currentSession.getCategories().clear();
+      selectedCategories.forEach(currentSession::addCategory);
 
-    DataManager.saveSession(session);
+
+      currentSession.complete();
+
+      sessionManager.setCurrentNote(new Note(reflectionArea.getText()));
+      DataManager.saveSession(currentSession);
+    }
 
     if (onSaveCallback != null) {
       onSaveCallback.run();
@@ -300,10 +305,19 @@ public class ReflectionViewController {
     this.viewSwitchCallback = callback;
   }
 
+  public void setOnCloseWithoutSaving(Runnable callback) {
+    this.onCloseWithoutSaving = callback;
+  }
+
   @FXML
   private void closeDialog() {
     if (viewSwitchCallback != null) {
       viewSwitchCallback.switchToMain();
+
+
+      if (onCloseWithoutSaving != null) {
+        onCloseWithoutSaving.run();
+      }
     }
   }
 
@@ -332,15 +346,15 @@ public class ReflectionViewController {
   }
 
   private void loadCurrentSessionData() {
-    // Lade die heutige Session
+
     LocalDate today = LocalDate.now();
     List<Session> todaysSessions = DataManager.loadSessionsForDate(today);
 
     if (!todaysSessions.isEmpty()) {
-      // Nehme die letzte Session des Tages
+
       Session currentSession = todaysSessions.get(todaysSessions.size() - 1);
 
-      // Füge die Kategorien der aktuellen Session hinzu
+
       for (Category category : currentSession.getCategories()) {
         if (!isCategoryAlreadySelected(category.getName())) {
           selectedCategories.add(category);
@@ -348,7 +362,7 @@ public class ReflectionViewController {
         }
       }
 
-      // Setze auch den Mood, falls vorhanden
+
       if (currentSession.getMood() != null) {
         String mood = currentSession.getMood();
         moodSelector.getChildren().forEach(node -> {
@@ -366,7 +380,7 @@ public class ReflectionViewController {
   private void loadExistingCategories() {
     Set<String> uniqueCategories = new HashSet<>();
 
-    // Lade alle Sessions und deren Kategorien
+
     List<Session> allSessions = DataManager.loadAllSessions();
     for (Session session : allSessions) {
       for (Category category : session.getCategories()) {
@@ -374,7 +388,7 @@ public class ReflectionViewController {
       }
     }
 
-    // Konvertiere zu Kategorien und füge zur ObservableList hinzu
+
     categories.clear();
     uniqueCategories.stream()
         .sorted(String::compareToIgnoreCase)

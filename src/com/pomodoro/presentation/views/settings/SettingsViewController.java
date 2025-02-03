@@ -26,7 +26,7 @@ public class SettingsViewController {
 
     @FXML
     public void initialize() {
-        // Initial state
+
         if (sessionSettingsView != null && ambientSettingsView != null) {
             sessionSettingsView.setVisible(true);
             ambientSettingsView.setVisible(false);
@@ -34,7 +34,7 @@ public class SettingsViewController {
             System.err.println("ERROR: Views not properly initialized!");
         }
 
-        // Set initial active button
+
         if (sessionButton != null) {
             sessionButton.getStyleClass().add("active");
         }

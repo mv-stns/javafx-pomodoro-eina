@@ -24,7 +24,6 @@ public class AmbientSettingsViewController {
 
     @FXML
     private void initialize() {
-        System.out.println("Initializing AmbientSettingsViewController");
         audioManager = new AudioManager();
         buttonSoundMap = new HashMap<>();
         soundStates = new HashMap<>();
@@ -34,7 +33,7 @@ public class AmbientSettingsViewController {
     }
 
     private void initializeSoundMap() {
-        // Natur Sounds
+
         buttonSoundMap.put(riverButton, new Sound("src/resources/audio/Natur/Fluss.mp3", "Fluss", "Natur"));
         buttonSoundMap.put(wavesButton, new Sound("src/resources/audio/Natur/Wellen.mp3", "Wellen", "Natur"));
         buttonSoundMap.put(campfireButton, new Sound("src/resources/audio/Natur/Lagerfeuer.mp3", "Lagerfeuer", "Natur"));
@@ -42,7 +41,7 @@ public class AmbientSettingsViewController {
         buttonSoundMap.put(howlingWindButton, new Sound("src/resources/audio/Natur/heulender Wind.mp3", "Heulender Wind", "Natur"));
         buttonSoundMap.put(treeWindButton, new Sound("src/resources/audio/Natur/Wind in Bäumen.mp3", "Wind in Bäumen", "Natur"));
 
-        // Regen Sounds
+
         buttonSoundMap.put(lightRainButton, new Sound("src/resources/audio/Regen/Leichter Regen.mp3", "Leichter Regen", "Regen"));
         buttonSoundMap.put(heavyRainButton, new Sound("src/resources/audio/Regen/Starker Regen.mp3", "Starker Regen", "Regen"));
         buttonSoundMap.put(thunderButton, new Sound("src/resources/audio/Regen/Donner.mp3", "Donner", "Regen"));

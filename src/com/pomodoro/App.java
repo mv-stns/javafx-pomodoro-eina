@@ -3,6 +3,7 @@ package com.pomodoro;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.views.reflection.ReflectionViewController;
 import com.pomodoro.presentation.views.sidebar.SidebarController;
+import com.pomodoro.presentation.views.statistics.StatisticsViewController;
 import com.pomodoro.presentation.views.timer.TimerViewController;
 import com.pomodoro.presentation.views.timer.TimerViewController.ViewSwitchCallback;
 import java.awt.Taskbar;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 public class App extends Application {
   private AnchorPane timerView, notesView, reflectionView, settingsView, statisticsView;
   private TimerViewController timerViewController;
+  private StatisticsViewController statisticsViewController;
   private VBox sidebarView;
   private StackPane contentArea;
   private Scene mainScene;
@@ -107,6 +109,7 @@ public class App extends Application {
 
       timerViewController = timerLoader.getController();
       ReflectionViewController reflectionController = reflectionLoader.getController();
+      statisticsViewController = statisticsLoader.getController();
 
       ViewSwitchCallback viewSwitchCallback = new TimerViewController.ViewSwitchCallback() {
         @Override
@@ -128,6 +131,10 @@ public class App extends Application {
           () -> {
             timerViewController.onReflectionSaved();
           });
+
+      reflectionController.setOnCloseWithoutSaving(() -> {
+        timerViewController.onReflectionSaved();
+      });
 
       timerViewController.setViewSwitchCallback(viewSwitchCallback);
       reflectionController.setViewSwitchCallback(viewSwitchCallback);
@@ -169,6 +176,9 @@ public class App extends Application {
   private void showStatisticsView() {
     contentArea.getChildren().clear();
     contentArea.getChildren().add(statisticsView);
+    if (statisticsViewController != null) {
+      statisticsViewController.refreshData();
+    }
   }
 
   private void showSettingsView() {

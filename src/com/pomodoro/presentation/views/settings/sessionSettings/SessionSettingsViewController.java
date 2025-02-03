@@ -43,12 +43,12 @@ public class SessionSettingsViewController {
         AppConfig.setFocusDuration(focusDurationSpinner.getValue());
         AppConfig.setShortBreakDuration(shortBreakDurationSpinner.getValue());
         AppConfig.setLongBreakDuration(longBreakDurationSpinner.getValue());
-        // Hier könnte noch eine Erfolgsmeldung oder Animation hinzugefügt werden
+
     }
 
     @FXML
     private void handleReset() {
         AppConfig.loadDefaultDurations();;
-        initialize(); // Spinner auf Standardwerte zurücksetzen
+        initialize();
     }
 }

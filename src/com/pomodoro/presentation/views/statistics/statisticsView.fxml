@@ -63,7 +63,7 @@
             <!-- Category Distribution -->
             <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
                 <Label text="Kategorie-Verteilung" styleClass="chart-title" />
-                <PieChart fx:id="categoryChart" />
+                <PieChart fx:id="categoryChart" minWidth="300" minHeight="300" />
                 <Label text="Daten vom heutigen Tag" styleClass="chart-legend" HBox.hgrow="ALWAYS" />
             </VBox>
         </HBox>

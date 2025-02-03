@@ -34,13 +34,13 @@ public class SoundManager {
 
         List<Sound> tempSounds = new ArrayList<>();
 
-        // Durchlaufe alle Kategorie-Ordner
+
         File[] categoryFolders = rootFolder.listFiles(folder -> folder.isDirectory());
         if (categoryFolders != null) {
             for (File categoryFolder : categoryFolders) {
                 String category = categoryFolder.getName();
 
-                // Durchlaufe alle Sound-Dateien in der Kategorie
+
                 File[] soundFiles = categoryFolder.listFiles(
                         (dir, name) -> name.toLowerCase().endsWith(".mp3") ||
                                 name.toLowerCase().endsWith(".wav"));

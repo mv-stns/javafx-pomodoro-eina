@@ -41,7 +41,7 @@ public class DailyStats {
         return frequency;
     }
 
-    // Getter methods
+
     public LocalDate getDate() {
         return date;
     }

@@ -9,7 +9,7 @@ public class AppConfig {
   private static final Properties properties = new Properties();
   public static final boolean DEBUG_MODE;
 
-  // Customizable durations
+
   public static int FOCUS_DURATION;
   public static int SHORT_BREAK_DURATION;
   public static int LONG_BREAK_DURATION;
@@ -55,7 +55,7 @@ public class AppConfig {
     longBreakDurationProperty.set(LONG_BREAK_DURATION);
   }
 
-  // Getter für die Properties
+
   public static SimpleIntegerProperty focusDurationProperty() {
     return focusDurationProperty;
   }
