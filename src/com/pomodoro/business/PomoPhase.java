@@ -1,23 +1,25 @@
 package com.pomodoro.business;
 
+import com.pomodoro.business.config.AppConfig;
+
 public enum PomoPhase {
-    FOCUS(25 * 60, "Fokus"),          // 25 Minuten * 60
-    SHORT_BREAK(5 * 60, "Kurze Pause"), // 5 Minuten
-    LONG_BREAK(15 * 60, "Lange Pause"); // 15 Minuten
+  FOCUS(AppConfig.FOCUS_DURATION, "Fokus"),
+  SHORT_BREAK(AppConfig.SHORT_BREAK_DURATION, "Kurze Pause"),
+  LONG_BREAK(AppConfig.LONG_BREAK_DURATION, "Lange Pause");
 
-    private final int durationInSeconds;
-    private final String displayName;
+  private final int durationInSeconds;
+  private final String displayName;
 
-    PomoPhase(int durationInSeconds, String displayName) {
-        this.durationInSeconds = durationInSeconds;
-        this.displayName = displayName;
-    }
+  PomoPhase(int durationInSeconds, String displayName) {
+    this.durationInSeconds = durationInSeconds;
+    this.displayName = displayName;
+  }
 
-    public int getDurationInSeconds() {
-        return durationInSeconds;
-    }
+  public int getDurationInSeconds() {
+    return durationInSeconds;
+  }
 
-    public String getDisplayName() {
-        return displayName;
-    }
+  public String getDisplayName() {
+    return displayName;
+  }
 }

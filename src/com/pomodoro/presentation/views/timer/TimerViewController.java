@@ -1,8 +1,14 @@
 package com.pomodoro.presentation.views.timer;
 
 import com.pomodoro.business.PomoPhase;
+import com.pomodoro.business.Session;
+import com.pomodoro.business.audio.AudioManager;
+import com.pomodoro.business.config.AppConfig;
+import com.pomodoro.business.utils.DataManager;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.components.LetterSpacedText;
+import de.hsrm.mi.eibo.simpleplayer.SimpleAudioPlayer;
+import de.hsrm.mi.eibo.simpleplayer.SimpleMinim;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,12 +30,18 @@ import javafx.util.Duration;
 
 public class TimerViewController {
 
-  @FXML private Button focusButton, shortBreakButton, longBreakButton;
-  @FXML private Arc timerArc, timerArcStatic;
-  @FXML private LetterSpacedText timeLabel;
-  @FXML private Label rangeLabel;
-  @FXML private Button resetButton, playButton, skipButton;
-  @FXML private HBox phaseWrapper;
+  @FXML
+  private Button focusButton, shortBreakButton, longBreakButton;
+  @FXML
+  private Arc timerArc, timerArcStatic;
+  @FXML
+  private LetterSpacedText timeLabel;
+  @FXML
+  private Label rangeLabel;
+  @FXML
+  private Button resetButton, playButton, skipButton;
+  @FXML
+  private HBox phaseWrapper;
 
   private Timeline timeline;
   private boolean isRunning = false;
@@ -38,9 +50,10 @@ public class TimerViewController {
   private PomoPhase currentPhase = PomoPhase.FOCUS;
   private static final int POMODOROS_UNTIL_LONG_BREAK = 3;
   private int completedPomodoros = 0;
-  private boolean isInBreak = false;
   private ViewSwitchCallback viewSwitchCallback;
   private Runnable onReflectionComplete;
+  private Session currentSession;
+  private SimpleAudioPlayer pausePlayer;
 
   public interface ViewSwitchCallback {
     void switchToReflection();
@@ -58,6 +71,31 @@ public class TimerViewController {
     setupButtons();
     setupTimer();
     updateDisplay();
+    setupAudio();
+
+    AppConfig.focusDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.FOCUS) {
+        onConfigChanged();
+      }
+    });
+
+    AppConfig.shortBreakDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.SHORT_BREAK) {
+        onConfigChanged();
+      }
+    });
+
+    AppConfig.longBreakDurationProperty().addListener((obs, oldVal, newVal) -> {
+      if (currentPhase == PomoPhase.LONG_BREAK) {
+        onConfigChanged();
+      }
+    });
+  }
+
+  private void setupAudio() {
+    new AudioManager();
+    SimpleMinim minim = new SimpleMinim();
+    pausePlayer = minim.loadMP3File("src/resources/audio/Pause.mp3");
   }
 
   private void setupStyles() {
@@ -94,20 +132,44 @@ public class TimerViewController {
     longBreakButton.setOnAction(e -> switchMode("longBreak"));
   }
 
+  private void startNewSession() {
+    currentSession = new Session(currentPhase);
+  }
+
+  private void completeSession() {
+    if (currentSession != null) {
+      currentSession.complete();
+      DataManager.saveSession(currentSession);
+    }
+  }
+
+  private void interruptSession(String reason) {
+    if (currentSession != null) {
+      currentSession.interrupt(reason);
+      DataManager.saveSession(currentSession);
+    }
+  }
+
   private void setupTimer() {
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
-    timeline =
-        new Timeline(
-            new KeyFrame(
-                Duration.millis(16),
-                e -> {
-                  remainingMillis -= 16;
-                  updateDisplay();
-                  if (remainingMillis <= 0) {
-                    timeline.stop();
-                    handlePhaseCompletion();
-                  }
-                }));
+
+    int durationInSeconds = switch (currentPhase) {
+      case FOCUS -> AppConfig.FOCUS_DURATION;
+      case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION;
+      case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION;
+    };
+
+    remainingMillis = durationInSeconds * MILLIS_PER_SECOND;
+    timeline = new Timeline(
+        new KeyFrame(
+            Duration.millis(16),
+            e -> {
+              remainingMillis -= 16;
+              updateDisplay();
+              if (remainingMillis <= 0) {
+                timeline.stop();
+                handlePhaseCompletion();
+              }
+            }));
     timeline.setCycleCount(Timeline.INDEFINITE);
   }
 
@@ -115,24 +177,29 @@ public class TimerViewController {
     isRunning = false;
     playButton.getStyleClass().remove("pause");
 
+    if (currentSession != null) {
+      completeSession();
+    }
+
     if (currentPhase == PomoPhase.FOCUS) {
+
+      playPauseSound();
 
       if (viewSwitchCallback != null) {
         viewSwitchCallback.switchToReflection();
-        onReflectionComplete =
-            () -> {
-              completedPomodoros++;
-              if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
-                switchMode("longBreak");
-                completedPomodoros = 0;
-              } else {
-                switchMode("shortBreak");
-              }
-              startTimer();
-            };
+
+        onReflectionComplete = () -> {
+          completedPomodoros++;
+          if (completedPomodoros >= POMODOROS_UNTIL_LONG_BREAK) {
+            switchMode("longBreak");
+            completedPomodoros = 0;
+          } else {
+            switchMode("shortBreak");
+          }
+          startTimer();
+        };
       }
     } else {
-
       switchMode("focus");
       startTimer();
     }
@@ -156,23 +223,31 @@ public class TimerViewController {
     } else {
       timeline.play();
       playButton.getStyleClass().add("pause");
+      if (currentSession == null) {
+        startNewSession();
+      }
     }
     isRunning = !isRunning;
   }
 
   private void resetTimer() {
     timeline.stop();
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
+    remainingMillis = AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
     isRunning = false;
     playButton.getStyleClass().remove("pause");
     completedPomodoros = 0;
     currentPhase = PomoPhase.FOCUS;
     updatePhaseButtons();
     updateDisplay();
+    updateTimerArc();
   }
 
   private void skipTimer() {
     timeline.stop();
+    if (currentSession != null) {
+      interruptSession("Manually skipped");
+    }
+
     if (currentPhase == PomoPhase.FOCUS) {
       handlePhaseCompletion();
     } else {
@@ -182,22 +257,37 @@ public class TimerViewController {
   }
 
   private void switchMode(String mode) {
+
     switch (mode) {
       case "focus":
         currentPhase = PomoPhase.FOCUS;
+        remainingMillis = AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
         break;
       case "shortBreak":
         currentPhase = PomoPhase.SHORT_BREAK;
+        remainingMillis = AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+
         break;
       case "longBreak":
         currentPhase = PomoPhase.LONG_BREAK;
+        remainingMillis = AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+
         break;
     }
 
-    remainingMillis = currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND;
-
     updatePhaseButtons();
     updateDisplay();
+  }
+
+  private void playPauseSound() {
+    if (pausePlayer != null) {
+      new Thread() {
+        public void run() {
+          pausePlayer.rewind();
+          pausePlayer.play();
+        }
+      }.start();
+    }
   }
 
   private void updatePhaseButtons() {
@@ -206,7 +296,6 @@ public class TimerViewController {
           focusButton.getStyleClass().remove("selected");
           shortBreakButton.getStyleClass().remove("selected");
           longBreakButton.getStyleClass().remove("selected");
-          System.out.println(currentPhase);
 
           switch (currentPhase) {
             case FOCUS:
@@ -222,32 +311,52 @@ public class TimerViewController {
         });
   }
 
-  private void updateDisplay() {
+  private void updateTimerArc() {
 
+    double totalDuration = switch (currentPhase) {
+      case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
+      case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+      case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+    };
+
+    double progress = 1 - (remainingMillis / totalDuration);
+
+    Platform.runLater(() -> {
+      timerArc.setLength(-progress * 360);
+    });
+  }
+
+  private void updateDisplay() {
     int totalSeconds = (int) (remainingMillis / MILLIS_PER_SECOND);
     int minutes = totalSeconds / 60;
     int seconds = totalSeconds % 60;
 
-    Platform.runLater(
-        () -> {
-          timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
-        });
-
-    double progress =
-        1 - (remainingMillis / (currentPhase.getDurationInSeconds() * MILLIS_PER_SECOND));
-    Platform.runLater(
-        () -> {
-          timerArc.setLength(-progress * 360);
-        });
+    Platform.runLater(() -> {
+      timeLabel.setText(String.format("%02d:%02d", minutes, seconds));
+      updateTimerArc();
+    });
 
     LocalTime now = LocalTime.now();
     LocalTime endTime = now.plusSeconds(totalSeconds);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-    Platform.runLater(
-        () -> {
-          rangeLabel.setText(
-              String.format("%s → %s", now.format(formatter), endTime.format(formatter)));
-        });
+    Platform.runLater(() -> {
+      rangeLabel.setText(
+          String.format("%s → %s", now.format(formatter), endTime.format(formatter)));
+    });
+  }
+
+  public void onConfigChanged() {
+    if (!isRunning) {
+
+      remainingMillis = switch (currentPhase) {
+        case FOCUS -> AppConfig.FOCUS_DURATION * MILLIS_PER_SECOND;
+        case SHORT_BREAK -> AppConfig.SHORT_BREAK_DURATION * MILLIS_PER_SECOND;
+        case LONG_BREAK -> AppConfig.LONG_BREAK_DURATION * MILLIS_PER_SECOND;
+      };
+
+      updateDisplay();
+      updateTimerArc();
+    }
   }
 
   public void onReflectionSaved() {

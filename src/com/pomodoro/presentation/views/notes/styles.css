@@ -8,13 +8,6 @@
     -fx-spacing: 10;
 }
 
-.section-title {
-    -fx-text-fill: -text-soft;
-    -fx-background-color: -bg-weak;
-    -fx-padding: 6 20;
-
-}
-
 .task-input-container {
     -fx-background-color: -bg-black;
     -fx-background-radius: 12;

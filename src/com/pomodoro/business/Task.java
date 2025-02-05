@@ -3,7 +3,7 @@ package com.pomodoro.business;
 import java.util.Date;
 
 public class Task {
-  private Date createdAt, finishedAt;
+  private Date finishedAt;
   private String taskName;
 
   public String getTaskName() {
@@ -14,7 +14,7 @@ public class Task {
 
   public Task(String s) {
     taskName = s;
-    createdAt = new Date();
+    new Date();
   }
 
   public void setFinished() {

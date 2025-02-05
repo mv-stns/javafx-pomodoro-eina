@@ -31,7 +31,6 @@ public class NotesViewController {
   @FXML private VBox taskList;
   @FXML private HBox charContainer;
   @FXML private Text characterCount;
-  private static final String NOTE_FILE = "tomodoro.note.txt";
   private Note currentNote;
   private ObservableList<Task> tasks = FXCollections.observableArrayList();
   private static final int MAX_CHARS = 500;

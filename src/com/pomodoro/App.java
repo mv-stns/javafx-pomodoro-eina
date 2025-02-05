@@ -3,6 +3,7 @@ package com.pomodoro;
 import com.pomodoro.business.utils.FontLoader;
 import com.pomodoro.presentation.views.reflection.ReflectionViewController;
 import com.pomodoro.presentation.views.sidebar.SidebarController;
+import com.pomodoro.presentation.views.statistics.StatisticsViewController;
 import com.pomodoro.presentation.views.timer.TimerViewController;
 import com.pomodoro.presentation.views.timer.TimerViewController.ViewSwitchCallback;
 import java.awt.Taskbar;
@@ -22,8 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private AnchorPane timerView, notesView, reflectionView;
+  private AnchorPane timerView, notesView, reflectionView, settingsView, statisticsView;
   private TimerViewController timerViewController;
+  private StatisticsViewController statisticsViewController;
   private VBox sidebarView;
   private StackPane contentArea;
   private Scene mainScene;
@@ -80,12 +82,12 @@ public class App extends Application {
   private void loadFXMLViews() throws IOException {
     try {
 
-      FXMLLoader sidebarLoader =
-          loadFXML("com/pomodoro/presentation/views/sidebar/sidebarView.fxml");
+      FXMLLoader sidebarLoader = loadFXML("com/pomodoro/presentation/views/sidebar/sidebarView.fxml");
       FXMLLoader timerLoader = loadFXML("com/pomodoro/presentation/views/timer/timerView.fxml");
       FXMLLoader notesLoader = loadFXML("com/pomodoro/presentation/views/notes/notesView.fxml");
-      FXMLLoader reflectionLoader =
-          loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
+      FXMLLoader reflectionLoader = loadFXML("com/pomodoro/presentation/views/reflection/reflectionView.fxml");
+      FXMLLoader settingsLoader = loadFXML("com/pomodoro/presentation/views/settings/settingsView.fxml");
+      FXMLLoader statisticsLoader = loadFXML("com/pomodoro/presentation/views/statistics/statisticsView.fxml");
 
       sidebarView = sidebarLoader.load();
       SidebarController sidebarController = sidebarLoader.getController();
@@ -102,31 +104,37 @@ public class App extends Application {
       timerView = timerLoader.load();
       notesView = notesLoader.load();
       reflectionView = reflectionLoader.load();
+      settingsView = settingsLoader.load();
+      statisticsView = statisticsLoader.load();
+
       timerViewController = timerLoader.getController();
       ReflectionViewController reflectionController = reflectionLoader.getController();
-      reflectionController.setTimerController(timerViewController);
+      statisticsViewController = statisticsLoader.getController();
 
-      ViewSwitchCallback viewSwitchCallback =
-          new TimerViewController.ViewSwitchCallback() {
-            @Override
-            public void switchToReflection() {
-              contentArea.getChildren().clear();
-              contentArea.getChildren().add(reflectionView);
-            }
+      ViewSwitchCallback viewSwitchCallback = new TimerViewController.ViewSwitchCallback() {
+        @Override
+        public void switchToReflection() {
+          contentArea.getChildren().clear();
+          contentArea.getChildren().add(reflectionView);
+        }
 
-            @Override
-            public void switchToMain() {
-              contentArea.getChildren().clear();
-              HBox mainViewContainer = new HBox();
-              mainViewContainer.getChildren().addAll(timerView, notesView);
-              contentArea.getChildren().add(mainViewContainer);
-            }
-          };
+        @Override
+        public void switchToMain() {
+          contentArea.getChildren().clear();
+          HBox mainViewContainer = new HBox();
+          mainViewContainer.getChildren().addAll(timerView, notesView);
+          contentArea.getChildren().add(mainViewContainer);
+        }
+      };
 
       reflectionController.setOnSave(
           () -> {
             timerViewController.onReflectionSaved();
           });
+
+      reflectionController.setOnCloseWithoutSaving(() -> {
+        timerViewController.onReflectionSaved();
+      });
 
       timerViewController.setViewSwitchCallback(viewSwitchCallback);
       reflectionController.setViewSwitchCallback(viewSwitchCallback);
@@ -139,12 +147,10 @@ public class App extends Application {
 
   private void loadStylesheets(Scene scene) {
     try {
-      URL variablesUrl =
-          getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
-      URL sidebarStylesUrl =
-          getClass()
-              .getClassLoader()
-              .getResource("com/pomodoro/presentation/views/sidebar/styles.css");
+      URL variablesUrl = getClass().getClassLoader().getResource("com/pomodoro/presentation/views/variables.css");
+      URL sidebarStylesUrl = getClass()
+          .getClassLoader()
+          .getResource("com/pomodoro/presentation/views/sidebar/styles.css");
 
       if (variablesUrl == null) {
         throw new IllegalStateException("Could not find variables.css");
@@ -169,10 +175,15 @@ public class App extends Application {
 
   private void showStatisticsView() {
     contentArea.getChildren().clear();
+    contentArea.getChildren().add(statisticsView);
+    if (statisticsViewController != null) {
+      statisticsViewController.refreshData();
+    }
   }
 
   private void showSettingsView() {
     contentArea.getChildren().clear();
+    contentArea.getChildren().add(settingsView);
   }
 
   private FXMLLoader loadFXML(String path) {

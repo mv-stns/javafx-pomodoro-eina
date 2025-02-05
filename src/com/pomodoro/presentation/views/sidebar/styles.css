@@ -21,7 +21,7 @@
     -fx-background-color: -bg-soft;
 }
 
-.icon {
+.nav-button .icon {
     -fx-stroke: -color-soft;
     -fx-fill:transparent;
     -fx-stroke-width: 2;

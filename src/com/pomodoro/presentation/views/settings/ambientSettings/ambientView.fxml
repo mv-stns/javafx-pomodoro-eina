@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.settings.ambientSettings.AmbientSettingsViewController"
+    styleClass="ambient-scroll-pane"
+    fitToWidth="true"
+    VBox.vgrow="ALWAYS">
+
+    <VBox styleClass="ambient-settings"
+        spacing="20">
+
+        <!-- Nature Sounds -->
+        <VBox spacing="10">
+            <Label text="NATUR" styleClass="section-title" />
+            <FlowPane hgap="10" vgap="10">
+                <Button fx:id="riverButton" text="Fluss"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="wavesButton" text="Wellen"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="campfireButton" text="Campfeuer"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="windButton" text="Wind"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="howlingWindButton" text="Heulender Wind"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="treeWindButton" text="Wind in den Bäumen"
+                    styleClass="sound-button" onAction="#toggleSound" />
+            </FlowPane>
+        </VBox>
+
+        <!-- Rain Sounds -->
+        <VBox spacing="10">
+            <Label text="REGEN" styleClass="section-title" />
+            <FlowPane hgap="10" vgap="10">
+                <Button fx:id="lightRainButton" text="Leichter Regen"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="heavyRainButton" text="Starker Regen"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="thunderButton" text="Gewitter"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="rainOnWindowButton" text="Regen auf Scheibe"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="rainOnUmbrellaButton" text="Regen auf Regenschirm"
+                    styleClass="sound-button" onAction="#toggleSound" />
+                <Button fx:id="rainOnTentButton" text="Regen auf einem Zelt"
+                    styleClass="sound-button" onAction="#toggleSound" />
+            </FlowPane>
+        </VBox>
+    </VBox>
+</ScrollPane>

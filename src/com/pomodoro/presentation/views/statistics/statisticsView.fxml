@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import com.pomodoro.presentation.components.LetterSpacedText?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.pomodoro.presentation.views.statistics.StatisticsViewController"
+    styleClass="statistics-view"
+    stylesheets="@styles.css">
+
+    <VBox spacing="24" AnchorPane.topAnchor="0.0"
+        AnchorPane.bottomAnchor="0.0"
+        AnchorPane.leftAnchor="0.0"
+        AnchorPane.rightAnchor="0.0">
+
+        <!-- Header -->
+        <HBox styleClass="statistics-header">
+            <Label text="STATISTIKEN" styleClass="section-title" />
+        </HBox>
+
+        <!-- Overview Cards -->
+        <HBox spacing="16" styleClass="stats-cards">
+            <VBox styleClass="stats-card">
+                <Label text="Heute" styleClass="card-title" />
+                <Label fx:id="todaySessionsLabel" styleClass="card-value" />
+                <Label text="Fokus-Sessions" styleClass="card-subtitle" />
+            </VBox>
+
+            <VBox styleClass="stats-card">
+                <Label text="Fokus-Zeit" styleClass="card-title" />
+                <Label fx:id="totalFocusTimeLabel" styleClass="card-value" />
+                <Label text="Diese Woche" styleClass="card-subtitle" />
+            </VBox>
+
+            <VBox styleClass="stats-card">
+                <Label text="Erfolgsrate" styleClass="card-title" />
+                <Label fx:id="completionRateLabel" styleClass="card-value" />
+                <Label text="Abgeschlossene Sessions" styleClass="card-subtitle" />
+            </VBox>
+        </HBox>
+
+        <!-- Charts Section -->
+        <HBox spacing="24" VBox.vgrow="ALWAYS">
+            <!-- Weekly Progress -->
+            <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                <Label text="Wöchentlicher Statistik" styleClass="chart-title" />
+                <BarChart fx:id="weeklyChart" legendVisible="false">
+                    <xAxis>
+                        <CategoryAxis label="Tag" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Sessions" />
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Category Distribution -->
+            <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                <Label text="Kategorie-Verteilung" styleClass="chart-title" />
+                <PieChart fx:id="categoryChart" minWidth="300" minHeight="300" />
+                <Label text="Daten vom heutigen Tag" styleClass="chart-legend" HBox.hgrow="ALWAYS" />
+            </VBox>
+        </HBox>
+
+        <!-- Detailed Stats -->
+        <VBox styleClass="detailed-stats">
+            <Label text="Details" styleClass="section-title" />
+            <TableView fx:id="detailsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="dateColumn" text="Datum" />
+                    <TableColumn fx:id="sessionsColumn" text="Sessions" />
+                    <TableColumn fx:id="focusTimeColumn" text="Fokus-Zeit (min)" />
+                    <TableColumn fx:id="completionColumn" text="Erfolgsrate" />
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</AnchorPane>
